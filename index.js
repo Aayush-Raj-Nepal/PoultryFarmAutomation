@@ -1,18 +1,39 @@
 import express from "express";
 import cors from "cors";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
 import { pool } from "./db.js";
 
-const app = express();
+dotenv.config();
 
+const app = express();
+const PORT = process.env.PORT || 10000;
+const JWT_SECRET = process.env.JWT_SECRET || "poultry-secret";
+
+// Middleware
 app.use(cors());
 app.use(express.json({ limit: "128kb" }));
-app.use(express.text({ type: "*/*", limit: "128kb" }));
+
+// --- Helpers & Utilities ---
+
+async function getSettings() {
+  const { rows } = await pool.query("SELECT key, value FROM settings");
+  const settings = {};
+  rows.forEach((r) => {
+    settings[r.key] = r.value;
+  });
+  return settings;
+}
 
 function parseIncomingPayload(body) {
   let payload = body;
-
   if (typeof payload === "string") {
-    payload = JSON.parse(payload);
+    try {
+      payload = JSON.parse(payload);
+    } catch (e) {
+      /* ignore */
+    }
   }
 
   let deviceId = "poultry-node-01";
@@ -21,174 +42,186 @@ function parseIncomingPayload(body) {
 
   if (Array.isArray(payload)) {
     samples = payload;
-  } else {
+  } else if (payload && typeof payload === "object") {
     deviceId = payload.deviceId || "poultry-node-01";
     cycle = payload.cycle ?? null;
     samples = payload.samples || [];
   }
 
-  if (!Array.isArray(samples)) {
-    throw new Error("Invalid payload format");
-  }
-
   return { deviceId, cycle, samples };
 }
 
-function comfortScore(sample) {
+function calculateComfortScore(sample, thresholds) {
   let score = 100;
+  const t = Number(sample.temperature_c ?? 25);
+  const h = Number(sample.humidity_pct ?? 60);
+  const c = Number(sample.co2_ppm ?? 800);
+  const l = Number(sample.light_lux ?? 50);
 
-  const t = Number(sample.temperature_c ?? 0);
-  const h = Number(sample.humidity_pct ?? 0);
-  const c = Number(sample.co2_ppm ?? 0);
-  const l = Number(sample.light_lux ?? 0);
+  if (t < thresholds.temp_min || t > thresholds.temp_max) score -= 15;
+  if (t < thresholds.temp_min - 2 || t > thresholds.temp_max + 3) score -= 15;
 
-  if (t < 24 || t > 32) score -= 20;
-  if (t < 22 || t > 35) score -= 10;
+  if (h < thresholds.humidity_min || h > thresholds.humidity_max) score -= 10;
+  if (h < thresholds.humidity_min - 10 || h > thresholds.humidity_max + 10)
+    score -= 10;
 
-  if (h < 50 || h > 75) score -= 15;
-  if (h < 45 || h > 85) score -= 10;
+  if (c > thresholds.co2_max) score -= 20;
+  if (c > thresholds.co2_max + 1000) score -= 20;
 
-  if (c > 1500) score -= 20;
-  if (c > 2500) score -= 20;
-
-  if (l < 5) score -= 5;
+  if (l < thresholds.light_min) score -= 5;
 
   return Math.max(0, Math.min(100, score));
 }
 
-function generateAlerts(sample) {
+async function generateAndPersistAlerts(sample, readingId, thresholds) {
   const alerts = [];
+  const t = Number(sample.temperature_c);
+  const h = Number(sample.humidity_pct);
+  const c = Number(sample.co2_ppm);
+  const l = Number(sample.light_lux);
 
-  if (sample.temperature_c > 33) {
+  if (t > thresholds.temp_max + 1) {
     alerts.push({
       sensor: "Temperature",
-      severity: "high",
-      message: "Heat stress risk",
-      recommendation: "Increase ventilation and cooling",
+      severity: t > thresholds.temp_max + 5 ? "critical" : "high",
+      message: `High temperature: ${t}°C`,
+      recommendation: "Increase ventilation and activate cooling systems.",
     });
-  }
-
-  if (sample.temperature_c < 22) {
+  } else if (t < thresholds.temp_min - 1) {
     alerts.push({
       sensor: "Temperature",
       severity: "medium",
-      message: "Low temperature detected",
-      recommendation: "Check heating setup",
+      message: `Low temperature: ${t}°C`,
+      recommendation: "Check heating systems and insulation.",
     });
   }
 
-  if (sample.humidity_pct > 80) {
+  if (h > thresholds.humidity_max + 5) {
     alerts.push({
       sensor: "Humidity",
       severity: "medium",
-      message: "High humidity",
-      recommendation: "Improve airflow and reduce moisture",
+      message: `High humidity: ${h}%`,
+      recommendation: "Improve airflow and check for leaks.",
     });
   }
 
-  if (sample.co2_ppm > 2000) {
+  if (c > thresholds.co2_max) {
     alerts.push({
       sensor: "CO2",
-      severity: "high",
-      message: "CO2 above safe threshold",
-      recommendation: "Ventilation required immediately",
+      severity: c > thresholds.co2_max + 1000 ? "critical" : "high",
+      message: `CO2 level high: ${c}ppm`,
+      recommendation:
+        "Emergency ventilation required. Check for gas leaks or congestion.",
     });
   }
 
-  if (sample.light_lux < 1) {
-    alerts.push({
-      sensor: "Light",
-      severity: "low",
-      message: "Low light / possible lighting issue",
-      recommendation: "Inspect lighting system",
-    });
+  // Persist to DB
+  for (const alert of alerts) {
+    await pool.query(
+      `INSERT INTO alerts (sensor, severity, message, recommendation, reading_id)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [
+        alert.sensor,
+        alert.severity,
+        alert.message,
+        alert.recommendation,
+        readingId,
+      ],
+    );
   }
 
   return alerts;
 }
 
-function zScoreAnomalies(rows, key, threshold = 2.2) {
-  const values = rows
-    .map((r) => Number(r[key]))
-    .filter((v) => !Number.isNaN(v));
+// --- Auth Middleware ---
 
-  if (values.length < 5) return [];
+const authenticateAdmin = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
 
-  const mean = values.reduce((a, b) => a + b, 0) / values.length;
-  const variance =
-    values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length;
-  const std = Math.sqrt(variance) || 1;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.adminId = decoded.id;
+    next();
+  } catch (err) {
+    res.status(403).json({ error: "Invalid token" });
+  }
+};
 
-  return rows
-    .map((r) => {
-      const value = Number(r[key]);
-      const z = (value - mean) / std;
-      return {
-        ...r,
-        metric: key,
-        zscore: Number(z.toFixed(2)),
-        isAnomaly: Math.abs(z) >= threshold,
-      };
-    })
-    .filter((r) => r.isAnomaly);
-}
+// --- Routes ---
 
 app.get("/", (req, res) => {
-  res.status(200).send("OK: Poultry backend running");
+  res.json({
+    message: "Poultry Farm Smart IoT API",
+    version: "2.0.0",
+    status: "online",
+  });
 });
 
+// Admin Login
+app.post("/api/admin/login", async (req, res) => {
+  const { username, password } = req.body;
+  if (
+    username === process.env.ADMIN_USERNAME &&
+    password === process.env.ADMIN_PASSWORD
+  ) {
+    const token = jwt.sign({ id: username, role: "admin" }, JWT_SECRET, {
+      expiresIn: "12h",
+    });
+    return res.json({ token, username });
+  }
+  res.status(401).json({ error: "Invalid credentials" });
+});
+
+// Settings Endpoints
+app.get("/api/admin/settings", authenticateAdmin, async (req, res) => {
+  try {
+    const settings = await getSettings();
+    res.json(settings);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch settings" });
+  }
+});
+
+app.put("/api/admin/settings", authenticateAdmin, async (req, res) => {
+  try {
+    const { key, value } = req.body;
+    await pool.query(
+      "INSERT INTO settings (key, value, updated_at) VALUES ($1, $2, NOW()) ON CONFLICT (key) DO UPDATE SET value = $2, updated_at = NOW()",
+      [key, value],
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update settings" });
+  }
+});
+
+// Ingest Reading
 app.post("/ingest", async (req, res) => {
   try {
     const { deviceId, cycle, samples } = parseIncomingPayload(req.body);
+    if (!samples.length) return res.status(400).json({ error: "No samples" });
 
-    if (!samples.length) {
-      return res.status(400).json({ error: "No samples found" });
-    }
+    const settings = await getSettings();
+    const thresholds = settings.thresholds || {};
 
     const client = await pool.connect();
-
     try {
       await client.query("BEGIN");
-
       for (let i = 0; i < samples.length; i++) {
         const s = samples[i];
-
-        await client.query(
-          `
-          INSERT INTO readings (
-            device_uid,
-            recorded_at,
-            cycle_no,
-            sample_index,
-            temperature_c,
-            humidity_pct,
-            mq_air_raw,
-            light_lux,
-            co2_ppm,
-            weight_kg
-          )
-          VALUES ($1, NOW(), $2, $3, $4, $5, $6, $7, $8, $9)
-          `,
-          [
-            deviceId,
-            cycle,
-            s.i ?? i,
-            s.t ?? null,
-            s.h ?? null,
-            s.a ?? null,
-            s.l ?? null,
-            s.c ?? null,
-            s.w ?? null,
-          ],
+        const { rows } = await client.query(
+          `INSERT INTO readings (device_uid, cycle_no, sample_index, temperature_c, humidity_pct, mq_air_raw, light_lux, co2_ppm, weight_kg)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
+          [deviceId, cycle, s.i ?? i, s.t, s.h, s.a, s.l, s.c, s.w],
         );
+        const readingId = rows[0].id;
+
+        // Smart Analytics: Generate and Persist Alerts
+        await generateAndPersistAlerts(s, readingId, thresholds);
       }
-
       await client.query("COMMIT");
-
-      res.status(200).json({
-        ok: true,
-        inserted: samples.length,
-      });
+      res.json({ ok: true, count: samples.length });
     } catch (e) {
       await client.query("ROLLBACK");
       throw e;
@@ -197,180 +230,236 @@ app.post("/ingest", async (req, res) => {
     }
   } catch (err) {
     console.error("INGEST ERROR:", err);
-    res.status(500).json({ error: "Failed to ingest data" });
+    res.status(500).json({ error: "Ingest failed" });
   }
 });
 
+// Readings API
 app.get("/api/readings/latest", async (req, res) => {
   try {
-    const { rows } = await pool.query(`
-      SELECT *
-      FROM readings
-      ORDER BY recorded_at DESC
-      LIMIT 1
-    `);
+    const { rows } = await pool.query(
+      "SELECT * FROM readings ORDER BY recorded_at DESC LIMIT 1",
+    );
+    if (!rows[0]) return res.json(null);
 
-    const latest = rows[0] || null;
-
-    if (!latest) {
-      return res.json(null);
-    }
-
+    const settings = await getSettings();
+    const latest = rows[0];
     res.json({
       ...latest,
-      comfort_score: comfortScore(latest),
-      alerts: generateAlerts(latest),
+      comfort_score: calculateComfortScore(latest, settings.thresholds),
+      farm_info: settings.farm_info,
     });
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch latest reading" });
+    res.status(500).json({ error: "Failed to fetch latest" });
   }
 });
 
 app.get("/api/readings", async (req, res) => {
+  const limit = Math.min(Number(req.query.limit || 100), 1000);
+  const hours = Number(req.query.hours || 24);
+
   try {
-    const limit = Number(req.query.limit || 300);
-
     const { rows } = await pool.query(
-      `
-      SELECT *
-      FROM readings
-      ORDER BY recorded_at DESC
-      LIMIT $1
-      `,
-      [limit],
+      "SELECT * FROM readings WHERE recorded_at >= NOW() - INTERVAL '1 hour' * $1 ORDER BY recorded_at DESC LIMIT $2",
+      [hours, limit],
     );
-
     res.json(rows.reverse());
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch readings" });
   }
 });
 
+// Alerts API
+app.get("/api/alerts", async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "SELECT * FROM alerts ORDER BY recorded_at DESC LIMIT 50",
+    );
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: "Failed" });
+  }
+});
+
+app.post("/api/alerts/:id/acknowledge", authenticateAdmin, async (req, res) => {
+  try {
+    await pool.query(
+      "UPDATE alerts SET status = 'acknowledged', acknowledged_at = NOW() WHERE id = $1",
+      [req.params.id],
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed" });
+  }
+});
+
+app.post("/api/alerts/:id/resolve", authenticateAdmin, async (req, res) => {
+  try {
+    await pool.query(
+      "UPDATE alerts SET status = 'resolved', resolved_at = NOW() WHERE id = $1",
+      [req.params.id],
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed" });
+  }
+});
+
+// Health & System Status
+app.get("/api/health", async (req, res) => {
+  try {
+    const dbStatus = await pool.query("SELECT NOW()");
+    const latestReading = await pool.query(
+      "SELECT recorded_at FROM readings ORDER BY recorded_at DESC LIMIT 1",
+    );
+
+    res.json({
+      status: "healthy",
+      uptime: process.uptime(),
+      database: "connected",
+      latest_ingest: latestReading.rows[0]?.recorded_at || null,
+      environment: process.env.NODE_ENV || "development",
+    });
+  } catch (err) {
+    res.status(500).json({ status: "unhealthy", error: err.message });
+  }
+});
+
+app.get("/api/device/status", async (req, res) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT
+        recorded_at as last_seen,
+        device_uid,
+        NOW() - recorded_at as idle_duration
+      FROM readings
+      ORDER BY recorded_at DESC
+      LIMIT 1
+    `);
+
+    const settings = await getSettings();
+    const staleTimeoutSub =
+      (settings.thresholds?.stale_timeout_min || 15) * 60 * 1000;
+
+    const data = rows[0] || { last_seen: null };
+    const isOnline =
+      data.last_seen && new Date() - new Date(data.last_seen) < staleTimeoutSub;
+
+    res.json({
+      deviceId: data.device_uid || "unknown",
+      status: isOnline ? "online" : "offline",
+      lastSeen: data.last_seen,
+      idleDuration: data.idle_duration,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed" });
+  }
+});
+
+// Analytics Summary & Prediction
 app.get("/api/analytics/summary", async (req, res) => {
   try {
     const { rows } = await pool.query(`
       SELECT
-        ROUND(AVG(temperature_c)::numeric, 2) AS avg_temp,
-        ROUND(AVG(humidity_pct)::numeric, 2) AS avg_humidity,
-        ROUND(AVG(light_lux)::numeric, 2) AS avg_light,
-        ROUND(AVG(co2_ppm)::numeric, 2) AS avg_co2,
-        ROUND(AVG(weight_kg)::numeric, 2) AS avg_weight,
-        MAX(co2_ppm) AS max_co2,
-        MIN(weight_kg) AS min_weight,
-        MAX(recorded_at) AS last_update
+        COUNT(*)::int as total_readings,
+        ROUND(AVG(temperature_c)::numeric, 2)::float as avg_temp,
+        ROUND(AVG(humidity_pct)::numeric, 2)::float as avg_humidity,
+        ROUND(AVG(co2_ppm)::numeric, 2)::float as avg_co2,
+        MAX(temperature_c)::float as max_temp,
+        MIN(temperature_c)::float as min_temp,
+        (SELECT COUNT(*)::int FROM alerts WHERE recorded_at >= NOW() - INTERVAL '24 hours') as alerts_24h
       FROM readings
       WHERE recorded_at >= NOW() - INTERVAL '24 hours'
     `);
-
-    res.json(rows[0]);
+    res.json(rows[0] || {});
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch summary" });
   }
 });
 
-app.get("/api/analytics/anomalies", async (req, res) => {
-  try {
-    const { rows } = await pool.query(`
-      SELECT *
-      FROM readings
-      WHERE recorded_at >= NOW() - INTERVAL '48 hours'
-      ORDER BY recorded_at ASC
-    `);
-
-    const anomalies = [
-      ...zScoreAnomalies(rows, "temperature_c"),
-      ...zScoreAnomalies(rows, "humidity_pct"),
-      ...zScoreAnomalies(rows, "co2_ppm"),
-      ...zScoreAnomalies(rows, "light_lux"),
-    ];
-
-    anomalies.sort((a, b) => new Date(a.recorded_at) - new Date(b.recorded_at));
-
-    res.json(anomalies);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch anomalies" });
-  }
-});
-
-app.get("/api/analytics/alerts", async (req, res) => {
-  try {
-    const { rows } = await pool.query(`
-      SELECT *
-      FROM readings
-      ORDER BY recorded_at DESC
-      LIMIT 50
-    `);
-
-    const alerts = rows.flatMap((r) =>
-      generateAlerts(r).map((a) => ({
-        ...a,
-        recorded_at: r.recorded_at,
-        value: {
-          temperature_c: r.temperature_c,
-          humidity_pct: r.humidity_pct,
-          co2_ppm: r.co2_ppm,
-          light_lux: r.light_lux,
-          weight_kg: r.weight_kg,
-        },
-      })),
-    );
-
-    res.json(alerts);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch alerts" });
-  }
-});
-
 app.get("/api/analytics/prediction", async (req, res) => {
   try {
-    const { rows } = await pool.query(`
-      SELECT *
-      FROM readings
-      ORDER BY recorded_at DESC
-      LIMIT 20
-    `);
+    // Basic linear regression on CO2 for the last 2 hours
+    const { rows } = await pool.query(
+      "SELECT co2_ppm, recorded_at FROM readings WHERE recorded_at >= NOW() - INTERVAL '2 hours' ORDER BY recorded_at ASC",
+    );
 
-    const ordered = rows.reverse();
-    const co2Series = ordered.map((r, i) => ({
-      x: i,
-      y: Number(r.co2_ppm || 0),
-    }));
-
-    if (co2Series.length < 2) {
-      return res.json({ message: "Not enough data" });
+    if (rows.length < 5) {
+      return res.json({
+        predicted_co2_30min: "--",
+        trend_slope: 0,
+        status: "Analyzing",
+        recommendation: "Gathering more data for precise prediction...",
+      });
     }
 
-    const n = co2Series.length;
-    const sumX = co2Series.reduce((s, p) => s + p.x, 0);
-    const sumY = co2Series.reduce((s, p) => s + p.y, 0);
-    const sumXY = co2Series.reduce((s, p) => s + p.x * p.y, 0);
-    const sumXX = co2Series.reduce((s, p) => s + p.x * p.x, 0);
+    // Simple slope calculation: (y2-y1)/(x2-x1)
+    const first = rows[0];
+    const last = rows[rows.length - 1];
+    const dx =
+      (new Date(last.recorded_at) - new Date(first.recorded_at)) / (1000 * 60); // minutes
+    const dy = last.co2_ppm - first.co2_ppm;
+    const slope = dy / dx; // ppm per minute
 
-    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX || 1);
-    const intercept = (sumY - slope * sumX) / n;
+    const predicted = Math.round(last.co2_ppm + slope * 30);
+    let status = "Stable";
+    let recommendation =
+      "Environment is stable. No immediate adjustment needed.";
 
-    const nextX = n + 2;
-    const predictedCo2 = Math.round(intercept + slope * nextX);
-
-    let status = "stable";
-    if (predictedCo2 > 1800) status = "warning";
-    if (predictedCo2 > 2200) status = "critical";
+    if (slope > 5) {
+      status = "Rising Fast";
+      recommendation =
+        "CO2 levels are rising rapidly. Suggest increasing ventilation duty cycle.";
+    } else if (slope < -5) {
+      status = "Falling Fast";
+      recommendation = "Levels are stabilizing. Continue current monitoring.";
+    }
 
     res.json({
-      predicted_co2_30min: predictedCo2,
-      trend_slope: Number(slope.toFixed(2)),
+      predicted_co2_30min: predicted,
+      trend_slope: parseFloat(slope.toFixed(2)),
       status,
-      recommendation:
-        predictedCo2 > 2000
-          ? "CO2 likely to exceed comfort threshold. Improve ventilation."
-          : "CO2 trend is currently acceptable.",
+      recommendation,
     });
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch prediction" });
+    res.status(500).json({ error: "Prediction failed" });
   }
 });
 
-const port = process.env.PORT || 10000;
-app.listen(port, "0.0.0.0", () => {
-  console.log(`Listening on ${port}`);
+// Demo Data Seeder
+app.post("/api/admin/seed-demo-data", authenticateAdmin, async (req, res) => {
+  try {
+    const points = 100;
+    const now = new Date();
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+      for (let i = points; i >= 0; i--) {
+        const time = new Date(now.getTime() - i * 15 * 60 * 1000); // every 15 mins
+        const temp = 25 + Math.random() * 5;
+        const hum = 60 + Math.random() * 10;
+        const co2 = 600 + Math.random() * 1000;
+        const weight = 2.5 + (points - i) * 0.01;
+
+        await client.query(
+          `INSERT INTO readings (device_uid, recorded_at, temperature_c, humidity_pct, co2_ppm, weight_kg, light_lux)
+           VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+          ["demo-device", time, temp, hum, co2, weight, 50],
+        );
+      }
+      await client.query("COMMIT");
+      res.json({ message: "Seeded 100 points" });
+    } catch (e) {
+      await client.query("ROLLBACK");
+      throw e;
+    } finally {
+      client.release();
+    }
+  } catch (err) {
+    res.status(500).json({ error: "Failed to seed" });
+  }
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Poultry Pro Backend listening on ${PORT}`);
 });
