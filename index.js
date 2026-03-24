@@ -270,6 +270,14 @@ app.post("/ingest", async (req, res) => {
       await client.query("BEGIN");
       for (let i = 0; i < samples.length; i++) {
         const s = samples[i];
+
+        // Data Scaling for Hardware:
+        // 1. Ammonia: -145 means 1.45 ppm (Scale by Math.abs(x)/100)
+        // 2. Weight: Grams to Kilograms (Scale by x/1000)
+        const rawNh3 = s.n ?? s.nh3_ppm ?? s.a;
+        const scaledNh3 = Math.abs(Number(rawNh3 || 0)) / 100;
+        const scaledWeight = Number(s.w || 0) / 1000;
+
         const { rows } = await client.query(
           `INSERT INTO readings (device_uid, cycle_no, sample_index, temperature_c, humidity_pct, mq_air_raw, light_lux, co2_ppm, nh3_ppm, weight_kg)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
@@ -282,14 +290,15 @@ app.post("/ingest", async (req, res) => {
             s.a,
             s.l,
             s.c,
-            s.n ?? s.nh3_ppm ?? s.a, // Map raw MQ sensor to Ammonia if no specific NH3 ppm is provided
-            s.w,
+            scaledNh3,
+            scaledWeight,
           ],
         );
-        // Map raw MQ sensor to Ammonia if no specific NH3 ppm is provided
-        if (s.n === undefined && s.nh3_ppm === undefined) {
-          s.nh3_ppm = s.a;
-        }
+
+        // Update s for alerts and subsequent processing
+        s.nh3_ppm = scaledNh3;
+        s.weight_kg = scaledWeight;
+        s.w = scaledWeight; // Ensure weight is uniform
 
         const readingId = rows[0].id;
 
