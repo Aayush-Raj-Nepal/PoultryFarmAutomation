@@ -78,7 +78,12 @@ function calculateComfortScore(sample, thresholds) {
   return Math.max(0, Math.min(100, score));
 }
 
-async function generateAndPersistAlerts(sample, readingId, thresholds) {
+async function generateAndPersistAlerts(
+  sample,
+  readingId,
+  thresholds,
+  client = pool,
+) {
   const alerts = [];
   const t = Number(sample.temperature_c);
   const h = Number(sample.humidity_pct);
@@ -148,7 +153,7 @@ async function generateAndPersistAlerts(sample, readingId, thresholds) {
 
   // Persist to DB
   for (const alert of alerts) {
-    await pool.query(
+    await client.query(
       `INSERT INTO alerts (sensor, severity, message, recommendation, reading_id)
        VALUES ($1, $2, $3, $4, $5)`,
       [
@@ -289,7 +294,7 @@ app.post("/ingest", async (req, res) => {
         const readingId = rows[0].id;
 
         // Smart Analytics: Generate and Persist Alerts
-        await generateAndPersistAlerts(s, readingId, thresholds);
+        await generateAndPersistAlerts(s, readingId, thresholds, client);
       }
       await client.query("COMMIT");
       res.json({ ok: true, count: samples.length });
