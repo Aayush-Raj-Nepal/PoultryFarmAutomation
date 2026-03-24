@@ -277,10 +277,15 @@ app.post("/ingest", async (req, res) => {
             s.a,
             s.l,
             s.c,
-            s.n ?? s.nh3_ppm,
+            s.n ?? s.nh3_ppm ?? s.a, // Map raw MQ sensor to Ammonia if no specific NH3 ppm is provided
             s.w,
           ],
         );
+        // Map raw MQ sensor to Ammonia if no specific NH3 ppm is provided
+        if (s.n === undefined && s.nh3_ppm === undefined) {
+          s.nh3_ppm = s.a;
+        }
+
         const readingId = rows[0].id;
 
         // Smart Analytics: Generate and Persist Alerts
