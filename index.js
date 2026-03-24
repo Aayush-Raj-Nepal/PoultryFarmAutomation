@@ -113,6 +113,13 @@ async function generateAndPersistAlerts(
       message: `High humidity: ${h}%`,
       recommendation: "Improve airflow and check for leaks.",
     });
+  } else if (h < thresholds.humidity_min - 5) {
+    alerts.push({
+      sensor: "Humidity",
+      severity: "medium",
+      message: `Low humidity: ${h}%`,
+      recommendation: "Increase moisture levels if necessary.",
+    });
   }
 
   if (c > thresholds.co2_max) {
