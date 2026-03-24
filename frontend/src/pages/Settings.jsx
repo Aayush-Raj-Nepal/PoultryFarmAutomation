@@ -12,6 +12,8 @@ import {
   Wind,
   ShieldCheck,
   Zap,
+  Sun,
+  Activity,
 } from "lucide-react";
 import { Card, CardHeader } from "../components/Card";
 import { Badge } from "../components/Badge";
@@ -197,6 +199,68 @@ const Settings = () => {
                           thresholds: {
                             ...p.thresholds,
                             co2_max: Number(e.target.value),
+                          },
+                        }))
+                      }
+                      className="w-24 p-2 bg-muted rounded-lg text-xs font-bold text-center"
+                    />
+                    <span className="text-xs font-bold">ppm</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold flex items-center gap-2">
+                    <Sun size={16} className="text-yellow-500" /> Light Range
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      value={localSettings.thresholds.light_min}
+                      onChange={(e) =>
+                        setLocalSettings((p) => ({
+                          ...p,
+                          thresholds: {
+                            ...p.thresholds,
+                            light_min: Number(e.target.value),
+                          },
+                        }))
+                      }
+                      className="w-16 p-2 bg-muted rounded-lg text-xs font-bold text-center"
+                    />
+                    <span className="text-muted-foreground">to</span>
+                    <input
+                      type="number"
+                      value={localSettings.thresholds.light_max}
+                      onChange={(e) =>
+                        setLocalSettings((p) => ({
+                          ...p,
+                          thresholds: {
+                            ...p.thresholds,
+                            light_max: Number(e.target.value),
+                          },
+                        }))
+                      }
+                      className="w-16 p-2 bg-muted rounded-lg text-xs font-bold text-center"
+                    />
+                    <span className="text-xs font-bold">lux</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-bold flex items-center gap-2">
+                    <Activity size={16} className="text-purple-500" /> Ammonia
+                    (NH3) Limit
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      value={localSettings.thresholds.nh3_max}
+                      onChange={(e) =>
+                        setLocalSettings((p) => ({
+                          ...p,
+                          thresholds: {
+                            ...p.thresholds,
+                            nh3_max: Number(e.target.value),
                           },
                         }))
                       }

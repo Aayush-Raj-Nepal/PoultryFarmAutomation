@@ -4,8 +4,13 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
 import { pool } from "./db.js";
+import { sendMessage } from "./utils/sparrowSmsHelper.js";
 
 dotenv.config();
+
+// In-memory throttling for SMS (prevent spam)
+const smsThrottle = new Map();
+const SMS_THROTTLE_MS = 30 * 60 * 1000; // 30 minutes
 
 const app = express();
 const PORT = process.env.PORT || 10000;
@@ -115,6 +120,32 @@ async function generateAndPersistAlerts(sample, readingId, thresholds) {
     });
   }
 
+  const n = Number(sample.nh3_ppm || 0);
+  if (n > (thresholds.nh3_max || 25)) {
+    alerts.push({
+      sensor: "Ammonia",
+      severity: n > (thresholds.nh3_max || 25) + 20 ? "critical" : "high",
+      message: `Ammonia level high: ${n}ppm`,
+      recommendation: "Increase ventilation and check litter conditions.",
+    });
+  }
+
+  if (l > thresholds.light_max) {
+    alerts.push({
+      sensor: "Light",
+      severity: "high",
+      message: `Light level very high: ${l} lux`,
+      recommendation: "Consider shading or reducing artificial light.",
+    });
+  } else if (l < thresholds.light_min) {
+    alerts.push({
+      sensor: "Light",
+      severity: "medium",
+      message: `Light level too low: ${l} lux`,
+      recommendation: "Check lighting systems or open windows.",
+    });
+  }
+
   // Persist to DB
   for (const alert of alerts) {
     await pool.query(
@@ -128,6 +159,30 @@ async function generateAndPersistAlerts(sample, readingId, thresholds) {
         readingId,
       ],
     );
+
+    // Send SMS for out-of-range alerts with throttling
+    if (process.env.ENABLE_SMS === "true") {
+      const now = Date.now();
+      const lastSent = smsThrottle.get(alert.sensor) || 0;
+
+      if (now - lastSent > SMS_THROTTLE_MS) {
+        const phone = process.env.ALERT_PHONE_NUMBER;
+        if (phone) {
+          const smsText = `POULTRY ALERT: ${alert.sensor} out of range! ${alert.message}. Recommendation: ${alert.recommendation}`;
+          sendMessage(phone, smsText)
+            .then(() => {
+              smsThrottle.set(alert.sensor, now);
+              console.log(`[SMS] Sent alert for ${alert.sensor} to ${phone}`);
+            })
+            .catch((e) => {
+              console.error(
+                `[SMS ERROR] Failed to send for ${alert.sensor}:`,
+                e.message,
+              );
+            });
+        }
+      }
+    }
   }
 
   return alerts;
@@ -211,9 +266,20 @@ app.post("/ingest", async (req, res) => {
       for (let i = 0; i < samples.length; i++) {
         const s = samples[i];
         const { rows } = await client.query(
-          `INSERT INTO readings (device_uid, cycle_no, sample_index, temperature_c, humidity_pct, mq_air_raw, light_lux, co2_ppm, weight_kg)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
-          [deviceId, cycle, s.i ?? i, s.t, s.h, s.a, s.l, s.c, s.w],
+          `INSERT INTO readings (device_uid, cycle_no, sample_index, temperature_c, humidity_pct, mq_air_raw, light_lux, co2_ppm, nh3_ppm, weight_kg)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
+          [
+            deviceId,
+            cycle,
+            s.i ?? i,
+            s.t,
+            s.h,
+            s.a,
+            s.l,
+            s.c,
+            s.n ?? s.nh3_ppm,
+            s.w,
+          ],
         );
         const readingId = rows[0].id;
 

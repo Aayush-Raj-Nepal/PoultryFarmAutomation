@@ -21,6 +21,7 @@ async function seed() {
     let humidity = isDay ? rand(55, 68) : rand(62, 76);
     let light = isDay ? rand(120, 300) : rand(0, 8);
     let co2 = isDay ? rand(700, 1300) : rand(900, 1600);
+    let nh3 = rand(2, 8) + (hour % 8 === 0 ? rand(15, 30) : 0);
     let mq = rand(250, 420);
 
     baseWeight -= rand(0.005, 0.03);
@@ -49,9 +50,10 @@ async function seed() {
         mq_air_raw,
         light_lux,
         co2_ppm,
-        weight_kg
+        weight_kg,
+        nh3_ppm
       )
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
       `,
       [
         deviceId,
@@ -64,6 +66,7 @@ async function seed() {
         Number(light.toFixed(2)),
         Math.round(co2),
         Number(weight.toFixed(2)),
+        Number(nh3.toFixed(2)),
       ],
     );
   }

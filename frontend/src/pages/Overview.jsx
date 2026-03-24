@@ -28,52 +28,110 @@ const StatCard = ({
   color,
   trend,
   loading,
-}) => (
-  <Card className="relative overflow-hidden group">
-    <div
+  min,
+  max,
+}) => {
+  const numValue = Number(value);
+  const isOutOfRange =
+    !isNaN(numValue) &&
+    ((min !== undefined && numValue < min) ||
+      (max !== undefined && numValue > max));
+
+  return (
+    <Card
       className={cn(
-        "absolute top-0 right-0 w-24 h-24 -mt-8 -mr-8 rounded-full opacity-10 group-hover:scale-110 transition-transform duration-500",
-        color,
+        "relative overflow-hidden group transition-all duration-300",
+        isOutOfRange &&
+          "ring-2 ring-destructive ring-offset-2 ring-offset-background shadow-lg shadow-destructive/20",
       )}
-    />
-    <div className="flex items-start justify-between mb-4">
+    >
       <div
         className={cn(
-          "p-3 rounded-2xl",
-          color.replace("bg-", "bg-").replace("500", "500/10"),
-          color.replace("bg-", "text-"),
+          "absolute top-0 right-0 w-24 h-24 -mt-8 -mr-8 rounded-full opacity-10 group-hover:scale-110 transition-transform duration-500",
+          isOutOfRange ? "bg-destructive" : color,
         )}
-      >
-        <Icon size={24} />
-      </div>
-      {trend && (
-        <Badge
-          variant={trend > 0 ? "success" : "destructive"}
-          className="flex items-center gap-1"
+      />
+
+      <div className="flex items-start justify-between mb-4">
+        <div
+          className={cn(
+            "p-3 rounded-2xl",
+            isOutOfRange
+              ? "bg-destructive/10 text-destructive"
+              : [color.replace("500", "500/10"), color.replace("bg-", "text-")],
+          )}
         >
-          {trend > 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-          {Math.abs(trend)}%
-        </Badge>
-      )}
-    </div>
-    {loading ? (
-      <div className="space-y-2 animate-pulse">
-        <div className="h-4 w-20 bg-muted rounded" />
-        <div className="h-8 w-24 bg-muted rounded" />
-      </div>
-    ) : (
-      <div>
-        <p className="text-sm font-medium text-muted-foreground">{title}</p>
-        <div className="flex items-baseline gap-1 mt-1">
-          <h2 className="text-3xl font-bold tracking-tight">{value}</h2>
-          <span className="text-sm font-semibold text-muted-foreground">
-            {unit}
-          </span>
+          <Icon size={24} className={cn(isOutOfRange && "animate-pulse")} />
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          {isOutOfRange && (
+            <Badge variant="destructive" className="animate-bounce">
+              <AlertCircle size={12} className="mr-1" />
+              ALERT
+            </Badge>
+          )}
+          {trend && (
+            <Badge
+              variant={trend > 0 ? "success" : "destructive"}
+              className="flex items-center gap-1"
+            >
+              {trend > 0 ? (
+                <TrendingUp size={12} />
+              ) : (
+                <TrendingDown size={12} />
+              )}
+              {Math.abs(trend)}%
+            </Badge>
+          )}
         </div>
       </div>
-    )}
-  </Card>
-);
+
+      {loading ? (
+        <div className="space-y-2 animate-pulse">
+          <div className="h-4 w-20 bg-muted rounded" />
+          <div className="h-8 w-24 bg-muted rounded" />
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <div className="flex items-baseline gap-1 mt-1">
+              <h2
+                className={cn(
+                  "text-3xl font-bold tracking-tight",
+                  isOutOfRange && "text-destructive",
+                )}
+              >
+                {value}
+              </h2>
+              <span className="text-sm font-semibold text-muted-foreground">
+                {unit}
+              </span>
+            </div>
+          </div>
+
+          {(min !== undefined || max !== undefined) && (
+            <div className="pt-3 border-t border-border/50 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <span>Optimal Range</span>
+              <span
+                className={cn(
+                  isOutOfRange ? "text-destructive" : "text-foreground",
+                )}
+              >
+                {min !== undefined && max !== undefined
+                  ? `${min} - ${max}`
+                  : max !== undefined
+                    ? `< ${max}`
+                    : `> ${min}`}{" "}
+                {unit}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+    </Card>
+  );
+};
 
 const Overview = () => {
   const { get, loading } = useApi();
@@ -81,19 +139,23 @@ const Overview = () => {
   const [deviceSt, setDeviceSt] = useState(null);
   const [summary, setSummary] = useState(null);
   const [alerts, setAlerts] = useState([]);
+  const [thresholds, setThresholds] = useState({});
 
   const fetchData = async () => {
     try {
-      const [latestRes, statusRes, summaryRes, alertsRes] = await Promise.all([
-        get("/readings/latest"),
-        get("/device/status"),
-        get("/analytics/summary"),
-        get("/alerts"),
-      ]);
+      const [latestRes, statusRes, summaryRes, alertsRes, settingsRes] =
+        await Promise.all([
+          get("/readings/latest"),
+          get("/device/status"),
+          get("/analytics/summary"),
+          get("/alerts"),
+          get("/admin/settings"),
+        ]);
       setLatest(latestRes);
       setDeviceSt(statusRes);
       setSummary(summaryRes);
       setAlerts(alertsRes);
+      setThresholds(settingsRes.thresholds || {});
     } catch (err) {
       console.error(err);
     }
@@ -154,7 +216,7 @@ const Overview = () => {
       </div>
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard
           title="Temperature"
           value={latest?.temperature_c || "--"}
@@ -162,6 +224,8 @@ const Overview = () => {
           icon={Thermometer}
           color="bg-orange-500"
           loading={loading && !latest}
+          min={thresholds.temp_min}
+          max={thresholds.temp_max}
         />
         <StatCard
           title="Humidity"
@@ -170,6 +234,8 @@ const Overview = () => {
           icon={Droplets}
           color="bg-blue-500"
           loading={loading && !latest}
+          min={thresholds.humidity_min}
+          max={thresholds.humidity_max}
         />
         <StatCard
           title="CO2 Levels"
@@ -178,13 +244,33 @@ const Overview = () => {
           icon={Wind}
           color="bg-emerald-500"
           loading={loading && !latest}
+          max={thresholds.co2_max}
+        />
+        <StatCard
+          title="Ammonia (NH3)"
+          value={latest?.nh3_ppm || "--"}
+          unit="ppm"
+          icon={Activity}
+          color="bg-purple-500"
+          loading={loading && !latest}
+          max={thresholds.nh3_max}
+        />
+        <StatCard
+          title="Light Level"
+          value={latest?.light_lux || "--"}
+          unit="lux"
+          icon={Sun}
+          color="bg-yellow-500"
+          loading={loading && !latest}
+          min={thresholds.light_min}
+          max={thresholds.light_max}
         />
         <StatCard
           title="Feed Weight"
           value={latest?.weight_kg || "--"}
           unit="kg"
           icon={Scale}
-          color="bg-purple-500"
+          color="bg-indigo-500"
           loading={loading && !latest}
         />
       </div>

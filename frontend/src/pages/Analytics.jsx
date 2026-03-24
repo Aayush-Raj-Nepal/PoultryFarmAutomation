@@ -215,11 +215,29 @@ const Analytics = () => {
           threshold={2000}
         />
         <ChartCard
+          title="Ammonia (NH3) Trend"
+          subtitle="Ammonia levels in ppm"
+          data={Array.isArray(data) ? data : []}
+          dataKey="nh3_ppm"
+          color="#a855f7"
+          unit="ppm"
+          threshold={25}
+        />
+        <ChartCard
+          title="Light (Lux) Trend"
+          subtitle="Environment light intensity"
+          data={Array.isArray(data) ? data : []}
+          dataKey="light_lux"
+          color="#eab308"
+          unit="lux"
+          threshold={300}
+        />
+        <ChartCard
           title="Poultry Growth (Weight)"
           subtitle="Average feed-to-weight estimation"
           data={Array.isArray(data) ? data : []}
           dataKey="weight_kg"
-          color="#a855f7"
+          color="#6366f1"
           unit="kg"
         />
       </div>
