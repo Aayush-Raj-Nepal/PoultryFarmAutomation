@@ -90,6 +90,10 @@ async function generateAndPersistAlerts(
   const c = Number(sample.co2_ppm);
   const l = Number(sample.light_lux);
 
+  console.log(
+    `[Alert Check] Temp: ${t} (range: ${thresholds.temp_min}-${thresholds.temp_max}), Lux: ${l} (max: ${thresholds.light_max}), NH3: ${sample.nh3_ppm} (max: ${thresholds.nh3_max})`,
+  );
+
   if (t > thresholds.temp_max + 1) {
     alerts.push({
       sensor: "Temperature",
@@ -172,25 +176,24 @@ async function generateAndPersistAlerts(
       ],
     );
 
-    // Send SMS for out-of-range alerts with throttlingss
+    // SMS TRIGGER (Simplified for Demo)
     if (process.env.ENABLE_SMS === "true") {
       const now = Date.now();
       const lastSent = smsThrottle.get(alert.sensor) || 0;
+      const THROTTLE_DEMO = 5000; // 5 seconds for demo
 
-      if (now - lastSent > SMS_THROTTLE_MS) {
+      if (now - lastSent > THROTTLE_DEMO) {
         const phone = process.env.ALERT_PHONE_NUMBER;
         if (phone) {
-          const smsText = `POULTRY ALERT: ${alert.sensor} out of range! ${alert.message}. Recommendation: ${alert.recommendation}`;
+          const smsText = `POULTRY ALERT: ${alert.sensor} anomaly! ${alert.message}. [DEMO]`;
+          console.log(`[Demo SMS] Attempting send to ${phone}: ${smsText}`);
           sendMessage(phone, smsText)
             .then(() => {
               smsThrottle.set(alert.sensor, now);
-              console.log(`[SMS] Sent alert for ${alert.sensor} to ${phone}`);
+              console.log(`[Demo SMS] SUCCESS: Sent alert for ${alert.sensor}`);
             })
             .catch((e) => {
-              console.error(
-                `[SMS ERROR] Failed to send for ${alert.sensor}:`,
-                e.message,
-              );
+              console.error(`[Demo SMS] FAILED: ${e.message}`);
             });
         }
       }
