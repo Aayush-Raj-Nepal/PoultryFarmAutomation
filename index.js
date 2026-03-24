@@ -20,6 +20,12 @@ const JWT_SECRET = process.env.JWT_SECRET || "poultry-secret";
 app.use(cors());
 app.use(express.json({ limit: "128kb" }));
 
+// Request logger
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
 // --- Helpers & Utilities ---
 
 async function getSettings() {
@@ -177,6 +183,10 @@ async function generateAndPersistAlerts(
     );
 
     // SMS TRIGGER (Simplified for Demo)
+    console.log(
+      `[Demo SMS] Checking triggers for ${alert.sensor}. ENABLE_SMS=${process.env.ENABLE_SMS}`,
+    );
+
     if (process.env.ENABLE_SMS === "true") {
       const now = Date.now();
       const lastSent = smsThrottle.get(alert.sensor) || 0;
@@ -186,17 +196,28 @@ async function generateAndPersistAlerts(
         const phone = process.env.ALERT_PHONE_NUMBER;
         if (phone) {
           const smsText = `POULTRY ALERT: ${alert.sensor} anomaly! ${alert.message}. [DEMO]`;
-          console.log(`[Demo SMS] Attempting send to ${phone}: ${smsText}`);
+          console.log(`[Demo SMS] TRIGGERED! Sending to ${phone}...`);
+
           sendMessage(phone, smsText)
             .then(() => {
               smsThrottle.set(alert.sensor, now);
-              console.log(`[Demo SMS] SUCCESS: Sent alert for ${alert.sensor}`);
+              console.log(`[Demo SMS] SUCCESS: SMS delivered to ${phone}`);
             })
             .catch((e) => {
-              console.error(`[Demo SMS] FAILED: ${e.message}`);
+              console.error(`[Demo SMS] ERROR during API call: ${e.message}`);
             });
+        } else {
+          console.error(
+            `[Demo SMS] ABORTED: ALERT_PHONE_NUMBER is missing in .env!`,
+          );
         }
+      } else {
+        console.log(
+          `[Demo SMS] SKIPPED: Throttled. Last sent ${Math.round((now - lastSent) / 1000)}s ago.`,
+        );
       }
+    } else {
+      console.log(`[Demo SMS] SKIPPED: ENABLE_SMS is not "true" in .env`);
     }
   }
 
