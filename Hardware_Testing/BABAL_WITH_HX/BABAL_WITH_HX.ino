@@ -1,0 +1,284 @@
+#include <Wire.h>
+#include <SoftwareSerial.h>
+#include "DFRobot_AHT20.h"
+#include <Adafruit_Sensor.h>
+#include <Adafruit_TSL2561_U.h>
+#include <MHZ19.h>
+#include "HX711.h"
+
+// -------------------- Configuration --------------------
+const char* apn = "web";
+const char* renderHost = "sim900-proxy.itsmeaayush24.workers.dev";
+const char* deviceId = "poultry-node-01";
+
+const int SAMPLES_PER_CYCLE = 3;
+const int POLL_DELAY = 10000;   // 10 seconds between samples
+const int UPLOAD_DELAY = 5000;  // delay after upload
+
+const int GSM_RX = 7, GSM_TX = 8;
+const int MHZ_RX = 6, MHZ_TX = 9;
+
+const float LOADCELL_CALIBRATION_FACTOR = -24.2;
+
+// -------------------- Objects --------------------
+DFRobot_AHT20 aht20;
+Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, 12345);
+SoftwareSerial mhzSerial(MHZ_RX, MHZ_TX);
+MHZ19 mhz19;
+HX711 scale;
+SoftwareSerial gsm(GSM_RX, GSM_TX);
+
+// -------------------- State --------------------
+unsigned long cycleCount = 0;
+
+// -------------------- GSM Helpers --------------------
+void flushGSM() {
+  while (gsm.available()) gsm.read();
+}
+
+String readGSM(unsigned long timeout = 3000) {
+  String s = "";
+  unsigned long start = millis();
+
+  while (millis() - start < timeout) {
+    while (gsm.available()) {
+      s += (char)gsm.read();
+    }
+  }
+  return s;
+}
+
+bool sendAT(String cmd, const char* expect = "OK", unsigned long timeout = 3000) {
+  gsm.listen();
+  flushGSM();
+
+  Serial.print(F("  [AT] "));
+  Serial.print(cmd);
+
+  gsm.println(cmd);
+  String response = readGSM(timeout);
+
+  bool success = (response.indexOf(expect) != -1);
+
+  if (success) {
+    Serial.println(F(" -> OK"));
+  } else {
+    Serial.println(F(" -> FAIL"));
+    Serial.println(F("  Response:"));
+    Serial.println(response);
+  }
+
+  return success;
+}
+
+bool performSyncUpload(String payload) {
+  Serial.println(F("\n--- UPLOAD STAGE ---"));
+
+  gsm.listen();
+
+  // Cleanup any stuck HTTP/GPRS state
+  sendAT("AT+HTTPTERM", "OK", 1000);
+  sendAT("AT+SAPBR=0,1", "OK", 1000);
+
+  if (!sendAT("AT", "OK", 2000)) return false;
+  sendAT("AT+CSQ", "OK", 3000);
+
+  sendAT("AT+SAPBR=3,1,\"Contype\",\"GPRS\"");
+  sendAT("AT+SAPBR=3,1,\"APN\",\"" + String(apn) + "\"");
+
+  if (!sendAT("AT+SAPBR=1,1", "OK", 15000)) {
+    Serial.println(F("GPRS open failed."));
+    return false;
+  }
+
+  if (!sendAT("AT+HTTPINIT", "OK", 5000)) {
+    sendAT("AT+SAPBR=0,1", "OK", 5000);
+    return false;
+  }
+
+  sendAT("AT+HTTPPARA=\"CID\",1");
+  sendAT("AT+HTTPPARA=\"URL\",\"http://" + String(renderHost) + "\"");
+  sendAT("AT+HTTPPARA=\"CONTENT\",\"application/json\"");
+
+  if (!sendAT("AT+HTTPDATA=" + String(payload.length()) + ",10000", "DOWNLOAD", 5000)) {
+    Serial.println(F("HTTPDATA failed."));
+    sendAT("AT+HTTPTERM");
+    sendAT("AT+SAPBR=0,1", "OK", 5000);
+    return false;
+  }
+
+  gsm.print(payload);
+  delay(500);
+
+  if (!sendAT("AT+HTTPACTION=1", "OK", 3000)) {
+    Serial.println(F("HTTPACTION command failed."));
+    sendAT("AT+HTTPTERM");
+    sendAT("AT+SAPBR=0,1", "OK", 5000);
+    return false;
+  }
+
+  String result = readGSM(15000);
+  Serial.print(F("HTTP RESULT: "));
+  Serial.println(result);
+
+  sendAT("AT+HTTPTERM", "OK", 5000);
+  sendAT("AT+SAPBR=0,1", "OK", 5000);
+
+  return true;
+}
+
+// -------------------- Sensor Helpers --------------------
+int readCO2() {
+  mhzSerial.listen();
+  delay(100);
+
+  int co2 = mhz19.getCO2();
+
+  // fallback if invalid
+  if (co2 <= 0 || co2 > 10000) {
+    co2 = -1;
+  }
+
+  return co2;
+}
+
+void readTempHumidity(float &t, float &h) {
+  t = 0.0;
+  h = 0.0;
+
+  if (aht20.startMeasurementReady(true)) {
+    t = aht20.getTemperature_C();
+    h = aht20.getHumidity_RH();
+  }
+}
+
+float readLight() {
+  sensors_event_t event;
+  tsl.getEvent(&event);
+
+  if (event.light) {
+    return event.light;
+  }
+  return 0.0;
+}
+
+int readAirQuality() {
+  return analogRead(A0);
+}
+
+float readWeight() {
+  return scale.get_units(5);
+}
+
+// -------------------- Setup --------------------
+void setup() {
+  Serial.begin(115200);
+  gsm.begin(9600);
+  mhzSerial.begin(9600);
+  Wire.begin();
+
+  Serial.println(F("Initializing system..."));
+  delay(5000);
+
+  if (!aht20.begin()) {
+    Serial.println(F("AHT20 init failed"));
+  } else {
+    Serial.println(F("AHT20 ready"));
+  }
+
+  if (!tsl.begin()) {
+    Serial.println(F("TSL2561 init failed"));
+  } else {
+    Serial.println(F("TSL2561 ready"));
+    tsl.enableAutoRange(true);
+    tsl.setIntegrationTime(TSL2561_INTEGRATIONTIME_13MS);
+  }
+
+  mhz19.begin(mhzSerial);
+  mhz19.autoCalibration(false);
+
+  scale.begin(2, 3);
+  scale.set_scale(LOADCELL_CALIBRATION_FACTOR);
+  scale.tare();
+
+  gsm.listen();
+  sendAT("AT");
+  sendAT("AT+CSQ");
+
+  Serial.println(F("Setup complete.\n"));
+}
+
+// -------------------- Main Loop --------------------
+void loop() {
+  String currentBatch = "{\"deviceId\":\"";
+  currentBatch += deviceId;
+  currentBatch += "\",\"cycle\":";
+  currentBatch += String(cycleCount);
+  currentBatch += ",\"samples\":[";
+
+  for (int i = 0; i < SAMPLES_PER_CYCLE; i++) {
+    Serial.print(F("Sampling #"));
+    Serial.println(i + 1);
+
+    int co2 = readCO2();
+
+    float t = 0.0, h = 0.0;
+    readTempHumidity(t, h);
+
+    float light = readLight();
+    int mq = readAirQuality();
+    float weight = readWeight();
+
+    Serial.print(F("Temp: "));
+    Serial.print(t, 1);
+    Serial.print(F(" C, Humidity: "));
+    Serial.print(h, 0);
+    Serial.print(F(" %, MQ: "));
+    Serial.print(mq);
+    Serial.print(F(", Light: "));
+    Serial.print(light, 0);
+    Serial.print(F(" lux, CO2: "));
+    Serial.print(co2);
+    Serial.print(F(" ppm, Weight: "));
+    Serial.print(weight, 2);
+    Serial.println(F(" kg"));
+
+    currentBatch += "{\"i\":";
+    currentBatch += String(i);
+    currentBatch += ",\"t\":";
+    currentBatch += String(t, 1);
+    currentBatch += ",\"h\":";
+    currentBatch += String(h, 0);
+    currentBatch += ",\"a\":";
+    currentBatch += String(mq);
+    currentBatch += ",\"l\":";
+    currentBatch += String(light, 0);
+    currentBatch += ",\"c\":";
+    currentBatch += String(co2);
+    currentBatch += ",\"w\":";
+    currentBatch += String(weight, 2);
+    currentBatch += "}";
+
+    if (i < SAMPLES_PER_CYCLE - 1) {
+      currentBatch += ",";
+      delay(POLL_DELAY);
+    }
+  }
+
+  currentBatch += "]}";
+
+  Serial.println(F("\nPayload to send:"));
+  Serial.println(currentBatch);
+
+  gsm.listen();
+  bool uploadOk = performSyncUpload(currentBatch);
+
+  if (uploadOk) {
+    Serial.println(F("Upload successful."));
+  } else {
+    Serial.println(F("Upload failed."));
+  }
+
+  cycleCount++;
+  delay(UPLOAD_DELAY);
+}
