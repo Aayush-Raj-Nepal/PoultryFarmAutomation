@@ -307,7 +307,7 @@ app.post("/ingest", async (req, res) => {
         // 2. Weight: Grams to Kilograms (Scale by x/1000)
         const rawNh3 = s.n ?? s.nh3_ppm ?? s.a;
         const scaledNh3 = Math.abs(Number(rawNh3 || 0)) / 100;
-        const scaledWeight = Number(s.w || 0) / 1000;
+        const scaledWeight = Number(s.w || 0);
 
         const { rows } = await client.query(
           `INSERT INTO readings (device_uid, cycle_no, sample_index, temperature_c, humidity_pct, mq_air_raw, light_lux, co2_ppm, nh3_ppm, weight_kg)
