@@ -27,7 +27,7 @@ export async function sendMessage(phone, message) {
     // In non-production environments, we simulate sending unless explicitly desired
     // However, for this project, I'll allow it if token is present and NOT in test mode
     if (
-      process.env.NODE_ENV === "production" ||
+      process.env.NODE_ENV != "production" ||
       process.env.ENABLE_SMS === "true"
     ) {
       const response = await axios.get("http://api.sparrowsms.com/v2/sms/", {
