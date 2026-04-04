@@ -29,6 +29,8 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+AI_IMPORT_ERROR = None
+
 try:
     import psycopg2
     from psycopg2.extras import RealDictCursor
@@ -37,13 +39,21 @@ try:
 except ImportError:
     _HAS_PSYCOPG2 = False
 
-import numpy as np
-import pandas as pd
+try:
+    import numpy as np
+    import pandas as pd
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from anomaly_detection import AnomalyDetector
-from forecasting import MultiSensorForecaster
-from risk_scoring import RiskScorer
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from anomaly_detection import AnomalyDetector
+    from forecasting import MultiSensorForecaster
+    from risk_scoring import RiskScorer
+except ImportError as exc:
+    AI_IMPORT_ERROR = str(exc)
+    np = None
+    pd = None
+    AnomalyDetector = None
+    MultiSensorForecaster = None
+    RiskScorer = None
 
 
 SENSOR_COLS = ["temperature", "humidity", "co2", "ammonia"]
@@ -53,6 +63,19 @@ SAFE_RANGES = {
     "co2": (400, 1500),
     "ammonia": (0, 25),
 }
+
+
+def get_ai_dependency_error():
+    return {
+        "status": "error",
+        "message": (
+            "AI analytics dependencies are missing. "
+            f"Install Python requirements from AI/farm/requirements.txt. Root cause: {AI_IMPORT_ERROR}"
+        ),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "data_source": "unknown",
+        "reading_count": 0,
+    }
 
 
 # ── Database ───────────────────────────────────────────────────────────────────
@@ -175,6 +198,13 @@ def _fetch_recent_readings_from_db(hours=24, limit=1500):
 
 
 def get_anomalies(hours=24, contamination=0.05):
+    if AI_IMPORT_ERROR:
+        return {
+            **get_ai_dependency_error(),
+            "anomalies": [],
+            "summary": {"total_anomalies": 0, "recent_anomalies": 0},
+        }
+
     df = fetch_recent_readings(hours=hours)
     source = df.attrs.get("data_source", "unknown")
     if df.empty or len(df) < 20:
@@ -253,6 +283,13 @@ def get_forecast(horizon=30):
     [A2] FIX: original called forecaster.predict_single_sensor() which does not exist.
     Replaced with forecaster.predict(df)[sensor] (bulk predict then index by sensor).
     """
+    if AI_IMPORT_ERROR:
+        return {
+            **get_ai_dependency_error(),
+            "forecasts": {},
+            "horizon_minutes": horizon,
+        }
+
     df = fetch_recent_readings(hours=6)
     source = df.attrs.get("data_source", "unknown")
     if df.empty or len(df) < 30:
@@ -320,6 +357,13 @@ def get_risk_score():
     """
     [A1] FIX: original called scorer.compute_risk_scores() — correct name is compute_risk_score().
     """
+    if AI_IMPORT_ERROR:
+        return {
+            **get_ai_dependency_error(),
+            "risk_score": 0,
+            "risk_level": "unknown",
+        }
+
     df = fetch_recent_readings(hours=2)
     source = df.attrs.get("data_source", "unknown")
     if df.empty or len(df) < 10:
@@ -395,6 +439,16 @@ def _get_recommendation(risk_level, contributions):
 
 
 def get_analytics_summary():
+    if AI_IMPORT_ERROR:
+        return {
+            **get_ai_dependency_error(),
+            "anomaly_summary": {"total_anomalies": 0, "recent_anomalies": 0},
+            "forecast_status": "error",
+            "risk_level": "unknown",
+            "risk_score": 0,
+            "recent_anomaly_count": 0,
+        }
+
     anomalies = get_anomalies(hours=24)
     forecast = get_forecast(horizon=30)
     risk = get_risk_score()
