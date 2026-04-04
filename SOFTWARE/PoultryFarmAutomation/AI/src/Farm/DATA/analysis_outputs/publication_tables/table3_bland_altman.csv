@@ -1,0 +1,8 @@
+Parameter,Value,95% CI
+Bias (mean difference),-0.0003,-0.0003 ± 0.0016
+Standard deviation of differences,0.0592,-
+Upper LoA (bias + 1.96×SD),0.1158,-
+Lower LoA (bias - 1.96×SD),-0.1165,-
+Points outside LoA (%),5.14,-
+Proportional bias slope,-0.0024,-
+Proportional bias p-value,0.0005,-

@@ -1,0 +1,5 @@
+method,precision,recall,f1_score,false_alarm_rate,true_positives,false_positives,true_negatives,false_negatives
+Z-Score,0.1667,0.0093,0.0175,0.0038,5,25,6635,535
+Isolation Forest,0.1257,0.1296,0.1276,0.0731,70,487,6173,470
+LOF,0.0653,0.0796,0.0717,0.0925,43,616,6044,497
+Ensemble,0.1429,0.0074,0.0141,0.0036,4,24,6636,536

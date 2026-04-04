@@ -1,0 +1,87 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+  \section{RESULT AND ANALYSIS}
+  This IoT-based poultry monitoring system successfully measured temperature, humidity, gas levels and other environmental parameters in real time. The Arduino Nano efficiently collected and processed sensor data and displayed the readings on a web dashboard. The system provided continuous monitoring and graphical analysis, helping to maintain proper conditions inside the poultry farm. Overall, the system reduced manual effort and improved monitoring accuracy.
+   \subsection{Result}
+  \subsubsection{Hardware Implementation}
+  The system was implemented using an arduino nano microcontroller as the central processing unit, integrated with multiple environmental sensing modules. The nano along with GSM Module was selected due to its low cost, low power consumption, and suitability for IoT-based applications.
+
+The hardware setup includes sensors such as the DHT22 for temperature and humidity measurement, MQ-137 for ammonia detection, and MH-Z19 for carbon dioxide monitoring. A load cell was also incorporated to measure poultry weight. These sensors were interfaced with the Arduino Nano through appropriate input pins.
+
+  
+The system demonstrated stable performance during testing and successfully supported real-time monitoring functionality.
+\begin{figure}[ht]
+        \centering
+               \includegraphics[width=0.3\textwidth]{Images/Hardware Mechanism.jpeg}
+        \label{fig:home_page_1}
+              \caption{Hardware Mechanism } 
+    \end{figure}
+ \newpage
+ \subsubsection{Sensor Data Observation}
+The system continuously collected environmental data including temperature, humidity, ammonia, and carbon dioxide levels. The sensors provided consistent readings under stable conditions, while variations were observed due to environmental changes.
+
+ Minor fluctuations were noted in gas sensor readings, indicating the need for periodic calibration. Overall, the system demonstrated reliable monitoring capability for poultry farm conditions.
+\begin{figure}[ht]
+        \centering
+               \includegraphics[width=0.7\textwidth]{Images/Poultry Dashboard.jpeg}
+        \label{fig:home_page}
+              \caption{Sensors Reading} 
+    \end{figure}
+\subsubsection{Dashboard Visualization}
+The system includes a web-based dashboard for real-time visualization of environmental parameters. It displays temperature, humidity, ammonia, and carbon dioxide levels in both numerical and graphical formats.
+
+The dashboard updates data at regular intervals, enabling users to monitor trends and detect abnormalities. The interface was found to be user-friendly and effective for real-time monitoring.
+\begin{figure}[ht]
+        \centering
+               \includegraphics[width=0.7\textwidth]{Images/Dashboard Overview.jpeg}
+        \label{fig:home_page}
+              \caption{Graphical overview } 
+    \end{figure}
+
+\subsubsection{Alert and Control System}
+The system generates alerts when environmental parameters exceed predefined thresholds. These alerts are displayed on the dashboard, enabling timely intervention.
+
+Although the system supports automated control through actuators, full integration has not yet been implemented and remains part of future development.
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.35\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/Active Alerts.jpeg}
+        \label{fig:image1}
+    \end{subfigure}
+    \hspace{1cm}
+    \begin{subfigure}[b]{0.355\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Images/Risk and Alerts.jpeg}
+        \label{fig:image2}
+    \end{subfigure}
+    \caption{Alerts}
+    \label{fig:figures}
+\end{figure}
+\subsubsection{System Performance}
+The system demonstrated stable performance during testing. The Arduino Nano successfully processed and transmitted sensor data with minimal delay.
+
+ Minor delays were observed due to network latency; however, the system maintained acceptable responsiveness and reliability for real-time monitoring.
+\begin{figure}[ht]
+        \centering
+               \includegraphics[width=0.5\textwidth]{Images/Reliabilty Overview.jpeg}
+        \label{fig:home_page}
+              \caption{System performance metrices} 
+\end{figure}
+\subsection{Analysis}
+\subsubsection{Accuracy of Sensors}
+The DHT22 sensor provided stable temperature and humidity readings. Gas sensors showed minor fluctuations, indicating the need for calibration. Overall, the sensors provided sufficiently reliable data for monitoring purposes.
+
+\subsubsection{System Response Time}
+The system achieved near real-time data updates. Slight delays were observed due to network conditions, but overall responsiveness remained within acceptable limits.
+
+
+
+\subsubsection{Reliability and Stability}
+The system operated continuously without major failures. Minor inconsistencies in sensor readings were observed but did not significantly affect performance.
+
+\subsubsection{ Power Efficiency}
+The system consumes low power and is suitable for continuous operation. It supports solar-powered operation, making it ideal for remote areas with limited electricity access.
+\end{document}

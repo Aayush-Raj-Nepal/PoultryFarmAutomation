@@ -1,0 +1,31 @@
+% AI Analytics Module Summary
+\begin{table}[htbp]
+  \centering
+  \caption{Summary of the four AI analytics modules implemented as a software extension
+           layer on the existing IoT monitoring platform. All modules operate on the
+           same four-channel environmental sensor stream (temperature, humidity,
+           CO\textsubscript{2}, NH\textsubscript{3}).}
+  \label{tab:ai_summary}
+  \begin{tabular}{p{2.8cm}p{3.8cm}p{2.8cm}p{3.2cm}}
+    \hline
+    \textbf{Module} & \textbf{Method} & \textbf{Key Result} & \textbf{Dashboard Output} \\
+    \hline
+    Anomaly Detection &
+      Ensemble (Z-Score + Isolation Forest + LOF) &
+      F1 = 0.7150; FAR = 0.0002 &
+      Anomaly score, severity label, sensor explanation \\[4pt]
+    Short-Horizon Forecasting &
+      Random Forest with lag features &
+      Avg.\ R\textsuperscript{2} = 0.9967 (15-min horizon) &
+      Predicted sensor values 15--60\,min ahead \\[4pt]
+    Risk Scoring &
+      Weighted multi-sensor composite index &
+      Normal: 99.8\% of monitoring period &
+      Shed Health Risk Index (Normal / Warning / Critical) \\[4pt]
+    State Clustering &
+      K-Means ($k=4$) on multi-sensor feature space &
+      4 distinct operating states identified &
+      Environmental state label for pattern recognition \\
+    \hline
+  \end{tabular}
+\end{table}

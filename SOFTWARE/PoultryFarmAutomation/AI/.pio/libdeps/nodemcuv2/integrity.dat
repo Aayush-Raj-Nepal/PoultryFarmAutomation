@@ -1,0 +1,5 @@
+adafruit/Adafruit Unified Sensor
+adafruit/Adafruit MPU6050@^2.0.9
+LiquidCrystal_I2C
+bogde/HX711@^0.7.5
+bblanchon/ArduinoJson@^6.21.3

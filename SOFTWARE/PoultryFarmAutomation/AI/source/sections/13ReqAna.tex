@@ -1,0 +1,191 @@
+    \documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{REQUIREMENT ANALYSIS}
+ This chapter outlines the hardware and software requirements, functional and non-functional
+ requirements, and feasibility study for the system, an IoT-based solution for real-time monitoring and automation in poultry farm management. These requirements ensure the system meets its objectives of improving productivity, reducing mortality,
+ and enhancing operational efficiency.
+\subsection{Hardware Requirement}
+ The system relies on a combination of sensors, actuators, and a microcontroller to monitor and control environmental conditions in poultry farms. The following hardware components are essential:
+    \subsubsection{\textbf{ Microcontroller:}}
+    Arduino Nano Development Board: Acts as the central processing unit for data acquisition, processing, and communication with the cloud platform. The Arduino Nano is chosen for its compact size, low power consumption, and ease of integration with various sensors and peripheral devices.
+   %\begin{figure}[ht]
+              %\centering
+             %   \includegraphics[width=0.55 \linewidth]{Images/esp32.jpg}
+              
+            %     \caption{esp32 devkit}
+           %      \label{fig:esp32 devkit}
+          %      \caption*{(Source:https://robonepal.com/wp-content/uploads/2024/06/4-3-9.jpg)}
+         % \end{figure}
+
+    \subsubsection{\textbf{Sensors:}}
+   – DHT22 Sensor: Measures temperature and humidity with high accuracy, critical
+ for maintaining optimal incubation conditions.\\
+ – Load Cells: Used to monitor the weight of chicken and their growth levels.\\
+- \textbf{GasSensors:}\\
+    * MQ-137: Detects ammonia (NH3) concentrations, which can affect poultry health if elevated.\\
+    * MH-Z19: Measures carbon dioxide (CO2) levels to ensure adequate ventilation.
+    %\begin{figure}[ht]
+               %\centering
+               % \includegraphics[width=0.55 \linewidth]{Images/current sensor.jpg}
+               
+              %  \caption{Current Sensor}
+             %   \label{fig:Current Sensor}
+            %    \caption*{(Source:https://www.daraz.com.np/products/sct-013-000-10a-20a-30a-50a-60a-100a-non-invasive-split-core-current-transformer-ac-current-sensor-i113779154.html)}
+           % \end{figure}
+\subsubsection{Actuators:}
+ 
+– Fans: Control ventilation to maintain safe levels of ammonia and CO2.\\
+
+%\begin{figure}[ht]
+     %         \centering
+    %            \includegraphics[width=0.55\linewidth]{Images/jumper wire.jpg}
+                
+   %             \caption{jumper wire}
+  %              \label{fig:jumper wire}
+ %               \caption*{(Source:https://static-01.daraz.com.np/p/24a9f356706a84c22e8ecdffaf3e28d4.jpg)}
+%\end{figure}
+\subsubsection{Power Supply:}
+– A reliable power source with backup options (e.g., batteries) to ensure continuous
+ operation in case of power outages.
+%\begin{figure}[ht]
+                %\centering
+                %\includegraphics[width=0.55\linewidth]{Images/voltage sensor.jpg}
+                
+               % \caption{voltage sensor}
+              %  \label{fig:voltage sensor}
+             %   \caption*{(Source:https://www.daraz.com.np/products/single-phase-voltage-mutual-inductor-ac-active-output-module-zmpt101b-2ma-i126600553.html)}
+%\end{figure}
+\subsubsection{Enclosures and Mounting Hardware:}
+ – Protective enclosures to shield components from the farm environment and
+ mounting hardware for secure installation.
+%\begin{figure}[ht]
+              % \centering
+               % \includegraphics[width=0.55\linewidth]{Images/resistor.jpg}
+                
+               % \caption{Resistor}
+               % \label{fig:Resistor}
+               % \caption*{(Source:https://highlight.com.np/product/resistor/)}
+%\end{figure}
+
+% \subsubsection{ High-Res Camera:}
+%  The Raspberry Pi Camera Module v2 captures high-resolution imagery for visual analysis of road surfaces. It supports crack and pot hole detection through image processing, complementing LiDAR data. 
+% %\begin{figure}
+             
+%                % \centering
+%                % \includegraphics[width=0.3\linewidth]{Images/capacitor.jpg}
+                
+%                 %\caption{capacitor}
+%                % \label{fig:capacitor}
+%                % \caption*{(Source:https://www.faranux.com/product/electrolytic-capacitors-4700uf25v-copy/)}
+% %\end{figure}
+
+% \subsubsection{  FPV Camera:}
+%  An analog First-Person View (FPV) camera provides live visual navigation, enabling operators to monitor the drone’s perspective in  during flight.
+% %\begin{figure}[ht]
+%                 %\centering
+%                % \includegraphics[width=0.60\linewidth]{Images/lcd display.jpg}
+            
+%                % \caption{LCD display}
+%                 %\label{fig:LCD display}
+%            % \caption*{(Source:https://www.rajguruelectronics.com/ProductView?tokDatRef=NTM5&tokenId=MQ==)}
+% %\end{figure}
+% \subsubsection{GPS Module (Ublox NEO-6M):}
+%  The Ublox NEO-6 Mmodule ensures accurate geolocation tagging of road data. It synchronizes with LiDAR and camera outputs to map distress locations precisely.
+% %\begin{figure}[ht]
+%                 %\centering
+%                 %\includegraphics[width=0.5\linewidth]{Images/matrix board.jpg}
+%                 %\caption{Matrix Board}
+%                 %\label{fig:Matrix Board}
+%                 %\caption*{(Source: https://static-01.daraz.com.np/p/24a9f356706a84c22e8ecdffaf3e28d4.jpg)}
+% %\end{figure}
+% \subsubsection{ IMU Sensor (MPU6050);}
+%  The MPU 6050 integrates a gyroscope and accelerometer to track the drone’s orientation and motion, ensuring stable flight and accurate data collection.
+% \subsubsection{SD Card / USB:}
+% A ≥32GB storage device enables onboard data logging of sensor outputs, ensuring data retention for post-flight analysis. 
+% \subsubsection{RC Transmitter:}
+%  A 2.4GHz transmitter/receiver allows manual control of the UAV, providing op
+% erators with precise navigation and emergency override capabilities. 
+% \subsubsection{  Frame Accessories:}
+%  Vibration dampers, brackets, wiring, and connectors optimize the drone’s stability and component integration, reducing noise in sensor data.
+%  \subsubsection{ Power Distribution:}
+%   A Power Distribution Board (PDB) with a 5V Battery Eliminator Circuit (BEC) ensures regulated power supply to the Raspberry Pi and sensors, enhancing system
+%  reliability 
+
+
+\subsection{Software Requirement}  The software stack for the system supports programming, data storage, visualization, and user interaction. The required software components are:
+    \subsubsection{Programming Environment:} An Operating system that manages – Arduino IDE: Used for developing and uploading firmware to the microcontrollers, providing a user-friendly platform for programming.
+    % \subsubsection{ ROS (Robot Operating System):}Facilitates sensor integration, LiDAR data handling, and time synchronization.ROS ensures seamless communication between hardware components and software modules.  
+
+    \subsubsection{Libraries:}
+    – Sensor-specific libraries (e.g., for DHT22, MQ-137, MH-Z19) to facilitate accurate
+ data reading.\\
+ – Communication libraries for Wi-Fi connectivity and data transmission to the cloud
+ platform.
+
+    \subsubsection{Cloud Platform:}
+    – Supabase: For storing sensor data and enabling real-time access and
+ analysis. These platforms support scalable data management and integration with
+ web applications.
+ \subsubsection{WebDashboard:}
+ – Developed using HTML, CSS, and JavaScript to provide a user-friendly interface for visualizing real-time data and controlling actuators.
+\subsubsection{Alert System:}
+– Integration with email or SMS services (e.g., SendGrid or Twilio) to send notifications when environmental parameters exceed predefined thresholds.
+% \subsubsection{ Three.js / Map API:}Provides3DheatmapvisualizationandGPS-linkedmapping,
+%  allowing users to interact with distress data on a mobile or web interface.
+ 
+\subsection{Functional Requirements}
+  The system must perform the following functions to achieve its objectives:
+\begin{itemize}
+    \item   \textbf{Real-Time Monitoring:} Continuously monitor temperature, humidity, ammonia levels and CO2 levels.
+\item  \textbf{Threshold Configuration:} Allow users to set and adjust thresholds for temperature (e.g.,
+ 37.2–37.8◦C), humidity (e.g., 45–55\% ), ammonia
+ (e.g., below 25 ppm), and CO2 (e.g., below 3,000 ppm).
+\item \textbf{ Automated Control:}
+ • Activate heaters to maintain temperature within the set range.\\
+ • Control ventilation systems to keep ammonia and CO2 levels below specified  thresholds.
+\item \textbf{Data Visualization:} Provide a web-based dashboard to display real-time data and historical trends for all monitored parameters.
+\item \textbf{Alert Mechanism:} Send alerts via email or SMS when parameters exceed set thresholds, enabling timely interventions.
+\end{itemize}
+
+\subsection{Non-Functional-Requirements}
+ To ensure the system’s effectiveness and user satisfaction, the following non-functional requirements are specified:
+\subsubsection{ Reliability:}
+The system must operate continuously with minimal downtime to ensure constant monitoring and control, critical for poultry health.
+\subsubsection{Scalability:}
+ The system should support multiple pens or expanding to larger farm setups without significant modifications.
+\subsubsection{Usability: }
+ The web dashboard must be intuitive, requiring minimal training for farmers to operate effectively.
+\subsubsection{Security:}
+Data transmission and storage must be secure, using encryption protocols to protect sensitive information.
+\subsubsection{Response Time:}
+ Real-time data updates must be provided with a delay of less than one
+ minute to ensure timely monitoring and control.
+
+\subsection{Feasibility Study}
+  The feasibility of the IOT project is evaluated across three dimensions: technical, economic, Schedule, and operational.
+
+  \subsubsection{Technical Feasibility}
+The required hardware components, such as the Arduino Nano, DHT22, MQ-137, MHZ19, load cells, and actuators, are widely available and commonly used in IoT applications. The Arduino NANo along with GSM Module and robust processing capabilities make it suitable for real-time data handling. Software technologies, including Arduino IDE, ThingSpeak, and Firebase, are mature and well-documented, ensuring ease of development and integration.
+
+
+\subsubsection{Economic Feasibility}
+ The total cost of hardware, software, and development  remains within an NPR49,380 budget, making the system economically viable. Long-term benefits include reduced losses due to less mortality and increased operational efficiency. 
+
+
+\subsubsection{ Operational Feasibility:}
+ The system is designed to be user-friendly, with an intuitive dashboard that simplifies monitoring and control tasks. Maintenance requirements are minimal, involving periodic sensor calibration and power supply checks. The system’s design aligns with the needs of poultry farmers in Nepal, where the poultry industry contributes significantly to the economy .
+
+
+\subsubsection{Schedule Feasibility: }
+ The project can be completed within 9 months (Ashadh to Falgun), covering design, development, testing, and deployment phases.
+\end{document}
+
+
+
+
+
+
+
+

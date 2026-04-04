@@ -1,0 +1,11 @@
+Category,Metric,Value
+Correlation,Pearson r,0.9988
+Correlation,Spearman ρ,0.9982
+Agreement,"ICC(2,1)",0.9988
+Error,MAE,0.0472
+Error,RMSE,0.0592
+Error,Bias,-0.0003
+Error,MAPE,16.84%
+Bland-Altman,Upper LoA,0.1158
+Bland-Altman,Lower LoA,-0.1165
+Bland-Altman,% Outside LoA,5.14%

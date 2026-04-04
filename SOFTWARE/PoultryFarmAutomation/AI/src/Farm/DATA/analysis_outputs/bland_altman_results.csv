@@ -1,0 +1,8 @@
+metric,value
+bias,-0.00033306481667525097
+sd_of_difference,0.05924607524879533
+upper_limit_of_agreement,0.11578924267096359
+lower_limit_of_agreement,-0.11645537230431409
+percent_outside_loa,5.140000000000001
+proportional_bias_slope,-0.0024323316093104786
+proportional_bias_p_value,0.0005476011209453429

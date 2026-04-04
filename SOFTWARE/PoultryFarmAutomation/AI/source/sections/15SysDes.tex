@@ -1,0 +1,143 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+    \section{SYSTEM DESIGN AND ARCHITECTURE}
+    
+    \subsection{Block Diagram}
+
+    \vspace{2em}
+    
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.8\textwidth]{Images/block diagram.drawio.png}
+    \vspace{0.2cm}
+        \caption{Block diagram of our system}
+        \label{fig:Block diagram}
+    \end{figure}
+
+   \subsubsection{Sensing Layer (Data Acquisition)}
+   At the first level, multiple sensors are deployed within the poultry environment to continuously monitor critical parameters:
+   \begin{itemize}
+    \item DHT Sensor: Measures temperature and humidity to maintain optimal living conditions for poultry.
+    \item Ammonia Sensor (MQ-137): Detects ammonia levels, which are harmful if they exceed safe limits.
+    \item CO₂ Sensor (MH-Z19): Monitors carbon dioxide concentration to ensure proper ventilation.
+    \item Lux Sensor: Measures light intensity, which affects poultry growth and behavior.
+    \item Weight Sensor (Load Cell): Tracks the weight of poultry to monitor growth and productivity.
+\end{itemize}
+
+\subsubsection{ Processing Layer(Control Unit)}
+All sensor data is transmitted to the  Arduino Nano, which acts as the central processing unit of the system.
+\begin{itemize}
+    \item The Arduino Nano collects and processes incoming sensor data.
+    \item It performs basic filtering and validation of the data.
+    \item Based on predefined threshold values, it determines whether the environmental conditions are within safe limits.
+\end{itemize}
+If abnormal conditions are detected, the Nano is designed to trigger appropriate actions such as:
+\begin{itemize}
+    \item Activating ventilation systems (fans)
+    \item Controlling heating elements
+    \item Generating alert signals
+\end{itemize}
+
+\subsubsection{ Communication Module}
+An integrated communication module (Wi-Fi/LTE) enables the Nano to transmit processed data to a remote cloud server.
+\begin{itemize}
+    \item This ensures efficient and real-time data transfer with minimal latency.
+\end{itemize}
+
+\subsubsection{Cloud and Data Storage Layer}
+The transmitted data is stored in a cloud database, where it is:
+\begin{itemize}
+    \item Logged for historical analysis
+    \item Processed for visualization
+    \item Used for generating alerts and insights
+\end{itemize}
+
+\subsubsection{Application Layer (User Interface)}
+A web/mobile application dashboard provides an interface for the user (farmer) to interact with the system.Through this dashboard, the user can:
+\begin{itemize}
+    \item View real-time environmental data
+    \item Analyze historical trends
+    \item Receive alerts when parameters exceed safe thresholds
+\end{itemize}
+
+
+\subsubsection{Power Supply System}
+The entire system is powered by a low power household grid supply along with protection circuit for voltage fluctuations.
+\begin{itemize}
+    \item Improves reliability and sustainability of the system
+\end{itemize}
+
+\newpage
+\subsection{Flowchart}
+
+ \begin{figure}[h]
+        \centering
+        % \includegraphics[scale=0.41]
+        \includegraphics[width=0.6\textwidth]{Images/poultryflowchart.drawio (1).png}
+        \caption{Flowchart for overall system} 
+        \label{fig:overall_system}
+    \end{figure}
+
+
+
+
+    \subsubsection{System Initialization}
+    The process begins with the start of the system, where all hardware components are powered on.
+    \begin{itemize}
+        \item All sensors are initialized and calibrated to ensure accurate readings.
+        \item The Arudino Nano establishes connection with the network (Wi-Fi/LTE).
+    \end{itemize}
+
+    \subsubsection{Data Collection}
+    After initialization:
+   \begin{itemize}
+       \item The system continuously collects data from all connected sensors.
+       \item Parameters include temperature, humidity, ammonia, CO₂, light intensity, and weight.
+   \end{itemize}
+
+   \subsubsection{Data Transmission and Processing}
+   The collected data is transmitted to the cloud/server using IoT protocols and the system validates the data by checking for:
+   \begin{itemize}
+       \item Errors
+        \item Missing values
+        \item Redundant data
+   \end{itemize}
+
+\subsubsection{Decision Making}
+The system evaluates:
+\begin{itemize}
+    \item Threshold values are predefined for each parameter.
+    \item This is the core decision point of the system.
+\end{itemize}
+
+\subsubsection{If Conditions are NORMAL}
+If all parameters are within safe limits:
+\begin{itemize}
+    \item Data is stored in the database
+    \item Data is displayed on the web/mobile dashboard
+\end{itemize}
+
+\subsubsection{If Conditions are ABNORMAL}
+If any parameter exceeds the threshold:
+\begin{itemize}
+    \item The system identifies the specific parameter causing the issue
+    \item It generates alerts (notifications to the farmer)
+    \item It may also trigger corrective actions, such as:
+\begin{itemize}
+    \item Turning on fans
+     \item Activating heaters
+      \item Adjusting ventilation
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Continuous Monitoring Loop}
+\begin{itemize}
+    \item The entire process runs in a continuous loop
+    \item Ensures real-time monitoring and rapid response
+\end{itemize}
+
+    
+\newpage
+
+\end{document}

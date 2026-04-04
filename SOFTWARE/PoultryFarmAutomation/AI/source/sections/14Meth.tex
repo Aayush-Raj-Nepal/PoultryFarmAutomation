@@ -1,0 +1,60 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{METHODOLOGY}
+This chapter outlines the systematic approach and technical framework employed in the 
+development of the "Poultry IOT" system. It details the working principle of the IoT-based 
+solution and presents a step-by-step methodology followed from system initialization to final validation.
+\subsection{Working Principle}
+The Poultry IOT system is based on continuous monitoring of environmental conditions inside poultry farms using sensors and microcontrollers. Parameters such as temperature, humidity, ammonia, CO₂ concentration, and chicken weight are measured at regular intervals. The data is transmitted wirelessly to a cloud platform where it is stored, processed, and visualized in real-time.
+
+If any parameter deviates from predefined safe ranges, the system is designed to automatically sends alerts to the farmer. A web dashboard allows remote monitoring and control, ensuring that the farm environment remains optimal for poultry health and productivity.
+
+\subsection{Step-by-Step Methodology}
+The implementation of the project was carried out through a structured, multi-stage process to ensure functionality, accuracy, and reliability.
+\subsubsection{System Initialization and Sensor Calibration:}
+\begin{itemize}
+\item \textbf{Component Integration:} The initial step involved interfacing all sensors (temperature, humidity, NH3 , CO2 , and load cells) with the Arduino Nano microcontroller's input/output pins.
+\item \textbf{Firmware Development:} A custom firmware was developed and flashed onto the Nano. This firmware governs the system's core logic, including sensor reading 
+intervals, data processing, and wireless communication protocols. 
+\item \textbf{Power-Up and Initialization:} Upon system power-up, the firmware initializes all connected peripherals and establishes a connection through the GSM Module. 
+\item \textbf{ Sensor Calibration:} To ensure data accuracy, each sensor was calibrated against certified, standard measuring instruments. Offset values and sensitivity adjustments were programmed into the firmware to correct any discrepancies and ensure the data collected is reliable and precise.
+\end{itemize}
+\subsubsection{Data Acquisition and Wireless Transmission}
+\begin{itemize}
+    \item \textbf{Scheduled Polling:} The Arduino Nano is programmed to read data from all connected sensors at predefined, regular intervals (e.g., every 60 seconds). 
+    \item \textbf{ Data Packetization:} The raw sensor values are converted into standardized units (e.g., °C for temperature, \%RH for humidity, ppm for gases, kg for weight). This information, along with a device identifier and a timestamp, is compiled into a structured data packet, typically in JSON format. 
+     \item \textbf{ Wireless Transmission:} The formatted data packet is transmitted to a dedicated cloud endpoint using HTTP.
+\end{itemize}
+\subsubsection{Real-Time Monitoring on Dashboard}
+\begin{itemize}
+    \item \textbf{Data Reception and Parsing:} A cloud-based server listens for incoming data from the Arduino Nano. Upon receipt, it parses the data packets to extract individual parameter values. 
+    \item \textbf{Data Visualization:} The processed data is pushed to a web-based dashboard. This interface displays the current status of the poultry environment using intuitive visual elements such as gauges for real-time readings, charts for historical trends, and status indicators. 
+    % \item Camera captures frame-by-frame visual evidence of road conditions.
+    % \item GPS tags the location for each second or major data block, aiding in mapping.
+    % \item Time-synchronized data enables correlation between road features and spatial location.
+\end{itemize}
+\subsubsection{ Alert System Integration}
+\begin{itemize}
+    \item \textbf{Threshold Configuration:} Safe and optimal operational ranges for each monitored parameter (e.g., temperature: 32−35∘C for chicken) are defined in the backend system configuration. 
+    \item \textbf{ Condition Monitoring:} The backend continuously compares incoming sensor data against these predefined thresholds. 
+    \item \textbf{Alert Generation:} If any parameter value falls outside its acceptable range for a sustained period, the system automatically triggers an alert. This alert is dispatched as a notification (e.g., email, SMS, or push notification) to the registered users, enabling swift corrective action.
+\end{itemize}
+\subsubsection{ Data Logging and Cloud Storage }
+Every data packet received by the server is timestamped and stored in a time-series cloud 
+database. This creates a permanent, chronological log of all environmental and operational 
+parameters. This historical data is crucial for long-term analysis, identifying patterns in poultry health or growth, and optimizing farm management strategies over time.
+% \subsubsection{Validation and Accuracy Testing}
+% \begin{itemize}
+%     \item A reference road segment (e.g., 50m) is manually measured by civil engineering students for pothole depth and crack width.
+%     \item The UAV system’s output is compared to manual measurements.
+%     \item Accuracy metrics like Mean Absolute Error (MAE), Precision, and Recall are calculated to validate the system’s reliability.
+% \end{itemize}
+\subsubsection{Testing and Validation}
+\begin{itemize}
+    \item \textbf{Unit Testing:} Each component, including individual sensors and the microcontroller module, was tested independently to verify its correct operation. 
+    \item \textbf{Integration Testing:} The complete end-to-end system was assembled and tested to ensure seamless data flow from the sensor nodes to the dashboard and alert system. 
+    \item \textbf{Field Validation:} The prototype was deployed in a simulated farm environment. System readings were concurrently compared with measurements from high-precision, calibrated handheld instruments over an extended period. This validation step served to confirm the system's overall accuracy, reliability, and robustness in a practical setting.
+\end{itemize}
+\end{document}

@@ -1,0 +1,289 @@
+ % defining the document type================
+\documentclass[12pt]{article} %the normal size is set to 12pt
+
+% some variables/newcommands============
+\newcommand{\projecttitle}{Poultry Farm Smart IoT Project with AI Powered Data Analytics and Smart Dashboards}
+\newcommand{\submissiondate}{June, 2024}
+
+\newcommand{\aayushroll}{ACE078BEI004}
+\newcommand{\anuragroll}{ACE078BEI011}
+\newcommand{\dipeshroll}{ACE078BEI020}
+\newcommand{\janakroll}{ACE078BEI024}
+
+% citation style and source file =========================
+\usepackage[style = ieee]{biblatex} % Load biblatex package, citation style IEEE
+
+% PACKAGES
+
+\usepackage[
+a4paper,
+    portrait,
+    top=1in, 
+    bottom=1in, 
+    right=1in, 
+    left=1.2in
+]{geometry} % page margin stuff
+\usepackage{graphicx} % Required for inserting images
+\usepackage{fontspec}
+\usepackage{titlesec} %formatting chapters
+\usepackage{geometry}
+\usepackage{titletoc} % editing TOC, is used to remove section numbering from TOC here
+\usepackage{tocloft}
+\usepackage{subfiles} % Needed to work modularly using subfiles
+\usepackage{parskip} % Removes indent before para and adds line space between para.
+\usepackage{enumitem} % to modify "enumerate" lists
+\usepackage[hidelinks]{hyperref} % making in document and web links clickable
+\usepackage{url} % does something with the way URLs work not sure
+\usepackage{tabularx} % helps make the tables span page width. 
+\usepackage{setspace} % enables using the \setstretch{} to set line spacing
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage[nohyperlinks]{acronym}
+\usepackage{amsmath} % math
+\usepackage[acronym, nopostdot, nonumberlist]{glossaries}
+\usepackage{glossaries-extra}
+\usepackage{listings}
+\usepackage{chngcntr}
+\usepackage{booktabs}
+
+\usepackage{newtxtext,newtxmath}
+% citation style and source file =========================
+\usepackage[style=ieee]{biblatex} % Load biblatex package, citation style IEEE
+\addbibresource{cite.bib} % .bib file with the references/citations
+
+% \makeglossaries
+\renewcommand{\contentsname}{\centering TABLE OF CONTENTS}
+\renewcommand{\listfigurename}{\centering \Large LIST OF FIGURES}
+\renewcommand{\listtablename}{\centering \Large LIST OF TABLES}
+
+% Ensure table, figure and equation counters reset with each new section
+\counterwithin{table}{section}
+\counterwithin{equation}{section}
+\counterwithin{figure}{section}
+
+% Customize list of figures and list of tables entries
+\renewcommand{\cftfigpresnum}{Figure~}
+\renewcommand{\cfttabpresnum}{Table~}
+
+% Adjust the space allocated for the number in the list of figures and tables
+\cftsetindents{figure}{0em}{6em}  % Adjust 4em as needed
+\cftsetindents{table}{0em}{6em}   % Adjust 4em as needed
+
+% Making some tweaks =========================================
+\renewcommand{\arraystretch}{1.5} % improves space around contents in table
+\renewcommand{\figureautorefname}{Figure}
+\spacing{1.5} % linespace = 1.5
+\graphicspath{ {Images/} } %the directory with the images
+\setmainfont{Times New Roman}
+% Customize the ToC
+\titlecontents{section}
+  [0em] % Indentation
+  {
+    \vspace{0.5em}
+    \bfseries
+  } % Formatting before the entry
+  { 
+    \contentslabel[{CHAPTER } \thecontentslabel] {0em} \hspace{1em} \newline \vspace{0.5em}
+  } % Numbered entry format
+  {} % Numberless entry format
+  {\titlerule*[.7pc]{\textnormal{.}}\contentspage} % Filler and page number
+  [\vspace{0.5em}] % Space after each entry, adjust as needed
+
+
+\setcounter{tocdepth}{2} % Include sections and subsections only in TOC
+% \renewcommand*\contentsname{TABLE OF CONTENTS}
+
+\renewcommand{\contentsname}{\hfill\bfseries\Large TABLE OF CONTENTS\hfill}   
+\renewcommand{\cftaftertoctitle}{\vspace{0.5em}}
+
+\renewcommand{\listfigurename}{\hfill\bfseries\Large List of Figures\hfill}   
+\renewcommand{\cftafterloftitle}{\vspace{0.5em}}
+
+\renewcommand{\listtablename}{\hfill\bfseries\Large List of Tables\hfill}   
+\renewcommand{\cftafterlottitle}{\vspace{0.5em}}
+
+%=============================================
+\title{
+    \textbf{ \projecttitle }
+}
+
+\author{
+    Aayush Raj Nepal (\aayushrollroll)
+    Anurag Jha (\anuragrollroll)
+    Dipesh Bhatta (\dipeshrollroll)
+    Janak Acharya (\janakroll)
+}
+
+\date{
+    \submissiondate
+}
+
+%=========================================================
+
+\begin{document}
+
+%=========================================================
+
+%\titleformat{<command>}[<shape>]{<format>}{<label>}{<sep>}{<before-code>}[<after-code>]
+\titleformat
+{\section}
+[display] % shape
+{\centering\bfseries\Large} % format
+{} % label
+{0.5ex} % sep
+{} % before-code
+[\vspace{8pt}] % after-code
+
+% ===========================================================
+% Cover Page
+
+\subfile{sections/1CoverPage.tex}
+\setcounter{page}{0}
+\pagenumbering{roman}
+
+
+\newpage
+\subfile{sections/2titlepage.tex}
+\pagenumbering{roman}
+\setcounter{page}{2}
+% ==================================
+
+
+
+\newpage
+\subfile{sections/3loa.tex}
+% ==================================
+
+
+% Copyright
+\newpage
+\subfile{sections/4Copyright.tex}
+
+% Acknowledgement
+ \newpage
+\subfile{sections/5Ack.tex}
+
+% ======================================
+
+
+% Abstract
+ \newpage
+ %\pagenumbering{roman}
+ \subfile{sections/6Abstract.tex}
+ 
+
+% ====================================
+% Table of Contents
+\newpage
+\subfile{sections/7TOC.tex}
+
+
+% =====================================
+% LIST OF TABLES
+% \newpage
+%  \subfile{sections/8ltables.tex} % Including the file
+
+%=========================================================
+% List of Figures
+
+\newpage
+\subfile{sections/8ListofFigures.tex} % Including the file
+
+%=========================================================
+% List of Acronyms
+
+\newpage
+\subfile{sections/9Abbr.tex} % Including the file
+
+\newpage
+\subfile{sections/10ListOfUnits.tex} % Including the file
+
+%=========================================================
+
+
+%\titleformat{<command>}[<shape>]{<format>}{<label>}{<sep>}{<before-code>}[<after-code>]
+\titleformat
+{\section}
+[display] % shape
+{\bfseries\Large} % format
+{CHAPTER \thesection} % label
+{0.5em} % sep
+{\vspace{-16pt}} % before-code
+[] % after-code
+
+% =======================================================
+% Introduction
+
+\newpage
+\clearpage % clears page numbering data 
+
+\pagenumbering{arabic} % starts numbering again from 1
+
+\subfile{sections/11Intro.tex}
+
+
+% =========================================================
+% Literature review
+
+\newpage
+\subfile{sections/12LitRev.tex}
+
+% ==========================================================
+%  Requirement Analysis
+
+\newpage
+\subfile{sections/13ReqAna.tex}
+
+% =========================================================
+%  Methodology
+\newpage
+\subfile{sections/14Meth.tex}
+
+% =========================================================
+%  System Design and Architecture
+\newpage
+\subfile{sections/15SysDes.tex}
+
+
+% =========================================================
+% %  Result and Analysis
+ \newpage
+\subfile{sections/16resultanalysis.tex}
+
+
+% =========================================================
+%  Time Schedule
+\newpage
+\subfile{sections/17Conclusion.tex}
+
+
+% ========================================================
+
+%\titleformat{<command>}[<shape>]{<format>}{<label>}{<sep>}{<before-code>}[<after-code>]
+\titleformat
+{\section}
+[display] % shape
+{\centering\bfseries\Large} % format
+{} % label
+{0.5ex} % sep
+{} % before-code
+[
+\vspace{8pt}
+] % after-code
+
+% ========================================================
+% References
+ \newpage
+ \subfile{sections/18References.tex}
+
+% ========================================================
+%Appendix
+\newpage
+\subfile{sections/19App.tex}
+
+
+
+\end{document}

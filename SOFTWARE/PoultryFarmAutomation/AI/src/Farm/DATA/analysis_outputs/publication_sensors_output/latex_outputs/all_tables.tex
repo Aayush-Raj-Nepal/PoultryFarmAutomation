@@ -1,0 +1,62 @@
+\begin{table}
+\caption{Descriptive statistics for sensor and reference measurements across all monitored variables.}
+\label{tab:descriptive_stats}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Variable & n & Sensor Mean & Sensor SD & Reference Mean & Reference SD & Sensor Min & Sensor Max & Reference Min & Reference Max \\
+\midrule
+Temperature & 1440 & 28.020000 & 3.551000 & 28.022000 & 3.554000 & 21.573000 & 34.079000 & 21.315000 & 34.242000 \\
+Humidity & 1440 & 60.053000 & 7.353000 & 60.059000 & 7.398000 & 44.831000 & 75.970000 & 44.515000 & 76.399000 \\
+CO$_2$ & 1440 & 798.117000 & 152.000000 & 797.207000 & 155.279000 & 468.106000 & 1143.418000 & 435.505000 & 1135.209000 \\
+Ammonia & 1440 & 10.966000 & 5.412000 & 10.970000 & 5.504000 & 0.526000 & 38.174000 & -0.682000 & 38.361000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}
+\caption{Performance metrics comparing sensor outputs against reference measurements.}
+\label{tab:performance_metrics}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Variable & MAE & RMSE & Bias & MAPE (\%) & Pearson $r$ & $p$-value & Slope & Intercept & $R^2$ \\
+\midrule
+Temperature & 0.167600 & 0.211000 & -0.002200 & 0.607400 & 0.998200 & 0.000000 & 0.997200 & 0.075600 & 0.996500 \\
+Humidity & 0.774300 & 0.968500 & -0.006400 & 1.310100 & 0.991400 & 0.000000 & 0.985300 & 0.876000 & 0.982900 \\
+CO$_2$ & 23.304600 & 29.011800 & 0.909700 & 3.048900 & 0.982400 & 0.000000 & 0.961700 & 31.476700 & 0.965100 \\
+Ammonia & 0.780400 & 0.989500 & -0.004200 & 10.842100 & 0.983700 & 0.000000 & 0.967300 & 0.354300 & 0.967700 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}
+\caption{Agreement analysis based on Bland--Altman statistics and ICC for all monitored variables.}
+\label{tab:agreement_metrics}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Variable & BA Bias & BA SD & Upper LoA & Lower LoA & Outside LoA (\%) & ICC(2,1) & Shapiro $p$ \\
+\midrule
+Temperature & -0.002200 & 0.211100 & 0.411400 & -0.415900 & 4.791700 & 0.998200 & 0.219200 \\
+Humidity & -0.006400 & 0.968800 & 1.892400 & -1.905200 & 4.722200 & 0.991400 & 0.315200 \\
+CO$_2$ & 0.909700 & 29.007600 & 57.764700 & -55.945200 & 4.375000 & 0.982200 & 0.641000 \\
+Ammonia & -0.004200 & 0.989800 & 1.935800 & -1.944200 & 5.277800 & 0.983600 & 0.591900 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}
+\caption{Compact summary of validation results across all variables.}
+\label{tab:validation_summary}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+Variable & MAE & RMSE & Bias & Pearson $r$ & $R^2$ & BA Bias & Upper LoA & Lower LoA & ICC(2,1) \\
+\midrule
+Temperature & 0.167600 & 0.211000 & -0.002200 & 0.998200 & 0.996500 & -0.002200 & 0.411400 & -0.415900 & 0.998200 \\
+Humidity & 0.774300 & 0.968500 & -0.006400 & 0.991400 & 0.982900 & -0.006400 & 1.892400 & -1.905200 & 0.991400 \\
+CO$_2$ & 23.304600 & 29.011800 & 0.909700 & 0.982400 & 0.965100 & 0.909700 & 57.764700 & -55.945200 & 0.982200 \\
+Ammonia & 0.780400 & 0.989500 & -0.004200 & 0.983700 & 0.967700 & -0.004200 & 1.935800 & -1.944200 & 0.983600 \\
+\bottomrule
+\end{tabular}
+\end{table}

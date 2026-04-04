@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__executeCode",
+      "Bash(python generate_tables.py)",
+      "Bash(python generate_publication_tables.py)",
+      "Bash(python run_all_pipelines.py)",
+      "Read(//c/Users/dipes/OneDrive/Documents/Machine Learning/Python/src/farm/DATA/**)",
+      "Read(//c/Users/dipes/OneDrive/Documents/Machine Learning/Python/src/Farm/DATA/**)",
+      "Bash(python -m ai_analytics.api_wrapper summary)"
+    ]
+  }
+}

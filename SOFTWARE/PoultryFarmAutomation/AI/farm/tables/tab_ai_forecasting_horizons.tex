@@ -1,0 +1,19 @@
+% Forecast Horizon Comparison (averaged across all 4 sensors)
+\begin{table}[htbp]
+  \centering
+  \caption{Average forecasting performance across all four environmental sensors
+           (temperature, humidity, CO\textsubscript{2}, NH\textsubscript{3})
+           at three forecast horizons. Performance degrades gracefully with increasing
+           horizon, as expected for a lag-feature model.}
+  \label{tab:ai_forecasting_horizons}
+  \begin{tabular}{lccc}
+    \hline
+    \textbf{Horizon} & \textbf{Avg.\ MAE} &
+    \textbf{Avg.\ R\textsuperscript{2}} & \textbf{Avg.\ MAPE (\%)} \\
+    \hline
+  15 min & 0.835 & 0.9967 & 0.95 \\
+  30 min & 8.545 & 0.7855 & 11.98 \\
+  60 min & 9.788 & 0.6467 & 19.30 \\
+    \hline
+  \end{tabular}
+\end{table}

@@ -1,0 +1,5 @@
+Variable,n,Sensor Mean,Sensor SD,Reference Mean,Reference SD,Sensor Min,Sensor Max,Reference Min,Reference Max
+Temperature,1440,28.02,3.551,28.022,3.554,21.573,34.079,21.315,34.242
+Humidity,1440,60.053,7.353,60.059,7.398,44.831,75.97,44.515,76.399
+CO$_2$,1440,798.117,152.0,797.207,155.279,468.106,1143.418,435.505,1135.209
+Ammonia,1440,10.966,5.412,10.97,5.504,0.526,38.174,-0.682,38.361

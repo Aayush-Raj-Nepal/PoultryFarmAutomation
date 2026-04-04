@@ -1,0 +1,20 @@
+% Forecasting Performance (15-minute horizon)
+\begin{table}[htbp]
+  \centering
+  \caption{Multi-sensor forecasting performance at the 15-minute ahead horizon using a
+           Random Forest model with lag features (lags: 1, 2, 3, 5, 10, 15 steps),
+           rolling statistics, and time-of-day encoding. Trained on 10\,080 samples
+           (7 days at 1-minute resolution).}
+  \label{tab:ai_forecasting_15min}
+  \begin{tabular}{lcccc}
+    \hline
+    \textbf{Sensor} & \textbf{MAE} & \textbf{RMSE} &
+    \textbf{R\textsuperscript{2}} & \textbf{MAPE (\%)} \\
+    \hline
+  Temperature & 0.0643 & 0.1029 & 0.9986 & 0.286 \\
+  Humidity & 0.1525 & 0.2305 & 0.9975 & 0.255 \\
+  CO\textsubscript{2} & 3.0471 & 6.3344 & 0.9946 & 0.441 \\
+  NH\textsubscript{3} & 0.0774 & 0.1647 & 0.9962 & 2.806 \\
+    \hline
+  \end{tabular}
+\end{table}

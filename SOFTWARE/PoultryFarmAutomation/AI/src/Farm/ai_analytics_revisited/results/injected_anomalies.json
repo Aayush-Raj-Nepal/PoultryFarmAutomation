@@ -1,0 +1,150 @@
+{
+  "spike": [
+    {
+      "index": 168,
+      "sensor": "temperature",
+      "magnitude": 15.970526887689372
+    },
+    {
+      "index": 605,
+      "sensor": "temperature",
+      "magnitude": -27.96684042477851
+    },
+    {
+      "index": 548,
+      "sensor": "temperature",
+      "magnitude": -18.345359053025717
+    },
+    {
+      "index": 65,
+      "sensor": "temperature",
+      "magnitude": 20.766863180262487
+    },
+    {
+      "index": 698,
+      "sensor": "humidity",
+      "magnitude": -32.14749352691818
+    },
+    {
+      "index": 90,
+      "sensor": "humidity",
+      "magnitude": 50.97542063532546
+    },
+    {
+      "index": 769,
+      "sensor": "humidity",
+      "magnitude": 36.36959614572175
+    },
+    {
+      "index": 685,
+      "sensor": "humidity",
+      "magnitude": 52.524081910464794
+    },
+    {
+      "index": 134,
+      "sensor": "co2",
+      "magnitude": 788.4445927115397
+    },
+    {
+      "index": 514,
+      "sensor": "co2",
+      "magnitude": 666.2109450412473
+    },
+    {
+      "index": 1207,
+      "sensor": "co2",
+      "magnitude": -879.4894291411592
+    },
+    {
+      "index": 538,
+      "sensor": "co2",
+      "magnitude": 1193.7623945738071
+    },
+    {
+      "index": 1094,
+      "sensor": "ammonia",
+      "magnitude": -34.54291078704372
+    },
+    {
+      "index": 23,
+      "sensor": "ammonia",
+      "magnitude": -33.64327549633555
+    },
+    {
+      "index": 1101,
+      "sensor": "ammonia",
+      "magnitude": 39.20362949594782
+    },
+    {
+      "index": 256,
+      "sensor": "ammonia",
+      "magnitude": -33.89046221173396
+    }
+  ],
+  "drift": [
+    {
+      "start_index": 541,
+      "length": 15,
+      "sensor": "temperature",
+      "rate": 0.7250351950265085,
+      "direction": 1
+    },
+    {
+      "start_index": 267,
+      "length": 13,
+      "sensor": "humidity",
+      "rate": 1.9781983294172276,
+      "direction": -1
+    },
+    {
+      "start_index": 254,
+      "length": 16,
+      "sensor": "co2",
+      "rate": 38.02930492968777,
+      "direction": -1
+    },
+    {
+      "start_index": 441,
+      "length": 19,
+      "sensor": "ammonia",
+      "rate": 1.6781666864874634,
+      "direction": -1
+    }
+  ],
+  "stuck": [
+    {
+      "start_index": 389,
+      "length": 13,
+      "sensor": "temperature",
+      "stuck_value": 32.67157292056737
+    },
+    {
+      "start_index": 597,
+      "length": 12,
+      "sensor": "humidity",
+      "stuck_value": 53.869141887814486
+    },
+    {
+      "start_index": 1124,
+      "length": 11,
+      "sensor": "co2",
+      "stuck_value": 535.3316451464259
+    },
+    {
+      "start_index": 606,
+      "length": 14,
+      "sensor": "ammonia",
+      "stuck_value": 11.48870812824232
+    }
+  ],
+  "correlated": [
+    {
+      "start_index": 32,
+      "length": 9,
+      "sensors": [
+        "co2",
+        "ammonia"
+      ]
+    }
+  ]
+}

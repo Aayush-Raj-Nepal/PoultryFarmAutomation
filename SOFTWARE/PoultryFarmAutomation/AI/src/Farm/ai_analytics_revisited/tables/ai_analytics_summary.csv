@@ -1,0 +1,5 @@
+AI Module,Method,Best Performance,Output,Dashboard Use
+Anomaly Detection,Ensemble (Z-score + IF + LOF),F1 = 0.0154,"Anomaly score, label, explanation",Real-time alerts
+Forecasting,Random Forest + Lag Features,R² = 0.9944,15-min ahead prediction,Early warning
+Risk Scoring,Weighted Multi-Sensor Index,Normal: 1400 (97.2%),Risk level (Normal/Warning/Critical),Health index display
+State Clustering,K-Means (k=4),4 distinct states identified,Environmental state label,Pattern recognition

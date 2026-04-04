@@ -1,0 +1,71 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+    \section{EPILOGUE }
+    \subsection{ WORK PROGRESS}
+   \subsubsection{Web Development}
+  SmartFlock provides real-time telemetry and adaptive control for poultry farms, enabling efficient monitoring and automated management.
+  
+\begin{figure}[ht]
+                \centering
+                \includegraphics[width=1 \linewidth]{Images/farm.jpg}
+                \caption{Web Dashboard}
+                \label{fig:Web Dashboard}
+            \end{figure}
+
+             \begin{figure}[ht]
+                \centering
+                \includegraphics[width=1 \linewidth]{Images/graph 1.jpg}
+                \caption{Graphical Analysis}
+                \label{fig:Graphical Analysis}
+            \end{figure}
+
+\newpage
+\begin{figure}[ht]
+                \centering
+                \includegraphics[width=1 \linewidth]{Images/graph.jpg}
+                \caption{Graphical Analysis}
+                \label{fig:Graphical Analysis}
+            \end{figure}
+            \newpage
+\subsubsection{Proposed sensor layout}
+This is the circuit layout for our project:
+            \begin{figure}[ht]
+                \centering
+                \includegraphics[width=0.6\linewidth]{Images/ckt.jpg}
+                \caption{Sensor Layout}
+                \label{fig:Sensor Layout}
+            \end{figure}
+
+\newpage
+    
+% \begin{itemize}
+%     \item \textbf{Hardware integration}: 
+\subsubsection{Hardware integration}
+    The sensors (DHT22, MQ-137, MH-Z19, load cells) and actuators (fans, heaters, egg turning motor) have been individually tested, but a complete integration with the ESP32 microcontroller and cloud system is in progress. This includes stable PCB design, protective casing for harsh farm environments, and ensuring reliable power backup for continuous operation.
+     \begin{figure}[ht]
+                \centering
+                \includegraphics[width=0.5\linewidth]{Images/work 2.jpeg}
+                \caption{Integrated Hardware}
+                \label{fig:Integrated Hardware}
+            \end{figure}
+
+ \begin{figure}[ht]
+                \centering
+                \includegraphics[width=0.5\linewidth]{Images/work1.jpeg}
+                \caption{ Hardware Testing}
+                \label{fig: Hardware Testing}
+            \end{figure}
+            
+   \newpage 
+\subsection{WORK REMAINING}
+\begin{itemize}
+    \item \textbf{Implementation of AI}: 
+    The current system operates on threshold-based control. The next stage involves training and deploying machine learning models for predictive analytics. This will enable early detection of anomalies (e.g., abnormal gas levels, irregular growth), optimization of feeding schedules, and adaptive control of temperature and humidity in real time. Integration of these AI modules into the cloud dashboard is also required.
+
+    \item \textbf{Validation and testing}: 
+    While preliminary tests in a simulated environment are complete, extensive field validation in an actual poultry farm remains. This phase will include comparing sensor data with standard instruments, stress-testing system reliability over long durations, and verifying AI predictions against real-world conditions. The outcome will confirm the accuracy, robustness, and practical applicability of SmartFlock.
+\end{itemize}
+ 
+        
+\end{document}           

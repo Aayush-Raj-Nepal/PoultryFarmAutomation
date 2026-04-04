@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 42 100% 97%;
+    --foreground: 14 47% 19%;
+    --muted: 42 60% 92%;
+    --muted-foreground: 18 24% 35%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 14 47% 19%;
+    --border: 32 41% 79%;
+    --input: 32 41% 79%;
+    --card: 0 0% 100%;
+    --card-foreground: 14 47% 19%;
+    --primary: 5 78% 43%;
+    --primary-foreground: 44 100% 96%;
+    --secondary: 45 100% 78%;
+    --secondary-foreground: 14 47% 19%;
+    --accent: 42 100% 88%;
+    --accent-foreground: 14 47% 19%;
+    --destructive: 0 72% 46%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 5 78% 43%;
+    --radius: 0.35rem;
+  }
+
+  .dark {
+    --background: 14 34% 13%;
+    --foreground: 42 100% 95%;
+    --muted: 14 28% 18%;
+    --muted-foreground: 41 52% 78%;
+    --popover: 14 34% 13%;
+    --popover-foreground: 42 100% 95%;
+    --border: 16 29% 24%;
+    --input: 16 29% 24%;
+    --card: 14 30% 16%;
+    --card-foreground: 42 100% 95%;
+    --primary: 8 77% 55%;
+    --primary-foreground: 42 100% 96%;
+    --secondary: 42 83% 58%;
+    --secondary-foreground: 14 47% 19%;
+    --accent: 18 30% 24%;
+    --accent-foreground: 42 100% 95%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 8 77% 55%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  html {
+    background: hsl(var(--background));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    background-image:
+      linear-gradient(180deg, rgba(165, 28, 19, 0.06), transparent 240px),
+      linear-gradient(90deg, rgba(241, 196, 15, 0.08), transparent 35%, transparent 65%, rgba(165, 28, 19, 0.05));
+    color: hsl(var(--foreground));
+    font-family: "Source Sans 3", "Helvetica Neue", sans-serif;
+    @apply antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Roboto Slab", Georgia, serif;
+    letter-spacing: -0.015em;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+}
+
+.glass-morphism {
+  background-color: rgba(255, 251, 244, 0.96);
+  backdrop-filter: none;
+  border: 1px solid rgba(180, 124, 67, 0.18);
+}
+
+.dark .glass-morphism {
+  background-color: rgba(45, 24, 20, 0.96);
+  border: 1px solid rgba(218, 165, 32, 0.15);
+}
+
+.card-hover {
+  @apply transition-colors duration-200;
+}
+.card-hover:hover {
+  border-color: hsla(var(--primary), 0.45);
+}
+
+::selection {
+  background: rgba(197, 52, 42, 0.2);
+}
+
+.dark ::selection {
+  background: rgba(248, 198, 64, 0.24);
+}

@@ -1,0 +1,113 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{LITERATURE REVIEW: COMPARATIVE ANALYSIS OF METHODS}
+\label{sec:litrev-table}
+
+\begin{table}[h!]
+\centering
+\caption{Comparative Analysis of IoT and AI Methods in Poultry Farming}
+\label{tab:literature_comparison}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{2.2cm}p{0.6cm}p{2.5cm}p{4.5cm}p{3cm}p{4.2cm}}
+\hline
+\textbf{Study} & \textbf{Year} & \textbf{Focus Area} & \textbf{Method / Technology} & \textbf{Key Results} & \textbf{Limitations / Gaps} \\
+\hline
+\multicolumn{6}{l}{\textit{Poultry Monitoring \& IoT Systems}} \\
+\hline
+Ahmed et al. \cite{ahmed2023smart} & 2024 & Behavior classification & Random Forest + SMOTE-AHA for data balancing; IoT sensors for behavior detection & 98\% accuracy; 97\% with balanced data & Requires labeled data; sensor placement critical \\
+\hline
+Ojo et al. \cite{ojo2022internet} & 2022 & Welfare \& health & Systematic review of IoT-ML methods for poultry & Identifies key welfare parameters; real-time monitoring potential & Lack of uniform welfare metrics \\
+\hline
+Godinho et al. \cite{godinho2025wireless} & 2025 & Environmental control & Wireless sensor network for poultry houses; conceptual framework & Conceptual study for monitoring and control & Implementation not validated \\
+\hline
+Chang \& Tu \cite{chang2023iot} & 2023 & Intelligent monitoring & IoT sensors for temperature, humidity, CO$_2$, NH$_3$ monitoring & Smart control system for poultry house environment & Limited to environmental parameters \\
+\hline
+Lashari et al. \cite{lashari2023internet} & 2023 & Environmental management & Multi-sensor IoT (temp, humidity, O$_2$, NH$_3$, CO$_2$, CO); cloud processing & Cost-effective for large facilities; robust management & Scalability concerns; calibration required \\
+\hline
+Kamor et al. \cite{kamor2024poultry} & 2024 & Sustainability & IoT sensors + wireless + cloud; disease management focus & Improved efficiency; addresses environmental concerns & Regional focus; limited validation \\
+\hline
+Karun et al. \cite{karun2024iot} & 2024 & Farm management & Embedded system + mobile platform; automation & Cost-saving; cloud access; labor reduction & Targeted at small-scale farms \\
+\hline
+PoultryMon \cite{yourstory2018poultrymon} & 2018 & Hatchery automation & IoT device + live monitoring + mobile alerts & 3\% efficiency gain; outlier detection & Single-purpose; hatchery only \\
+\hline
+\multicolumn{6}{l}{\textit{Machine Learning \& Prediction Methods}} \\
+\hline
+Ji et al. \cite{ji2025egg} & 2025 & Egg production & ML + SHAP explanations for egg production rate and weight prediction & Predictive model for broiler breeders & Requires historical production data \\
+\hline
+Manikandan \& Neethirajan \cite{manikandan2025acoustic} & 2025 & Acoustic monitoring & ML framework for non-invasive welfare assessment from sound & Decodes poultry welfare from vocalizations & Audio data collection challenges \\
+\hline
+Mao et al. \cite{mao2022distress} & 2022 & Distress detection & Deep learning for automated chicken distress vocalization identification & Automated distress call identification & Requires labeled audio data \\
+\hline
+Breiman \cite{breiman2001rf} & 2001 & ML algorithm & Random Forest ensemble method & Foundation for classification/regression tasks & Interpretability challenges \\
+\hline
+Liu et al. \cite{liu2008iforest} & 2008 & Anomaly detection & Isolation Forest for outlier detection & Efficient unsupervised anomaly detection & Parameter sensitivity \\
+\hline
+\multicolumn{6}{l}{\textit{Statistical Validation Methods}} \\
+\hline
+Bland \& Altman \cite{bland1986agreement} & 1986 & Agreement analysis & Bland-Altman plot for method comparison & Limits of agreement; bias estimation & Assumes normally distributed differences \\
+\hline
+Koo \& Li \cite{koo2016icc} & 2016 & Reliability testing & Intraclass Correlation Coefficient (ICC) guidelines & ICC selection and reporting for reliability & Requires paired measurements \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
+\subsection{Method Reliability Assessment}
+
+Based on the cited literature, Table~\ref{tab:reliable_methods} summarizes the most reliable methods by application domain.
+
+\begin{table}[h!]
+\centering
+\caption{Most Reliable Methods by Application Domain}
+\label{tab:reliable_methods}
+\begin{tabular}{p{3.5cm}p{4.5cm}p{2cm}p{4cm}}
+\hline
+\textbf{Application} & \textbf{Recommended Method} & \textbf{Accuracy} & \textbf{Reference} \\
+\hline
+Behavior Classification & Random Forest + SMOTE-AHA & 97--98\% & \cite{ahmed2023smart} \\
+\hline
+Environmental Monitoring & Multi-sensor IoT network & Framework & \cite{lashari2023internet, chang2023iot} \\
+\hline
+Egg Production Prediction & ML + SHAP explanations & Variable & \cite{ji2025egg} \\
+\hline
+Acoustic Welfare Analysis & ML framework for sound & Variable & \cite{manikandan2025acoustic} \\
+\hline
+Distress Detection & Deep learning on audio & Variable & \cite{mao2022distress} \\
+\hline
+Anomaly Detection & Isolation Forest & Efficient & \cite{liu2008iforest} \\
+\hline
+Sensor Validation & Bland-Altman + ICC & Statistical & \cite{bland1986agreement, koo2016icc} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Synthesis for Current Project}
+
+The literature supports the following approach for the GJ Poultry project:
+
+\begin{enumerate}
+    \item \textbf{Environmental Monitoring:} Multi-sensor framework with temperature, humidity, CO$_2$, and NH$_3$ sensors \cite{lashari2023internet, chang2023iot, godinho2025wireless}
+
+    \item \textbf{Data Acquisition:} ESP8266/ESP32-based IoT platform with cloud connectivity \cite{kamor2024poultry, yourstory2018poultrymon}
+
+    \item \textbf{Anomaly Detection:} Isolation Forest for environmental anomalies \cite{liu2008iforest} combined with Random Forest classification \cite{breiman2001rf}
+
+    \item \textbf{Sensor Validation:} Bland-Altman analysis and ICC for reliability testing \cite{bland1986agreement, koo2016icc}
+
+    \item \textbf{Predictive Analytics:} ML-based prediction following \cite{ji2025egg}'s approach for production metrics
+
+    \item \textbf{Farm Management:} Embedded + mobile platform for accessibility \cite{karun2024iot}
+\end{enumerate}
+
+\subsection{Research Gaps Addressed}
+
+\begin{itemize}
+    \item Integration of multiple monitoring subsystems (behavior + environment + weight) as identified by \cite{ojo2022internet}
+    \item Cost-effective solutions for small farmers in developing countries \cite{karun2024iot}
+    \item Localized research for environmental/economic contexts (e.g., Nepal)
+    \item Validation methodology using established statistical frameworks \cite{bland1986agreement, koo2016icc}
+\end{itemize}
+
+\end{document}

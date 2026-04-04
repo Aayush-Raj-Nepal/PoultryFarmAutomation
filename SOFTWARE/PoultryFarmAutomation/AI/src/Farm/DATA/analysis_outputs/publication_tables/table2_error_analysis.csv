@@ -1,0 +1,7 @@
+Metric,Value,Unit
+Mean Absolute Error (MAE),0.0472,kg
+Root Mean Square Error (RMSE),0.0592,kg
+Bias (Mean Error),-0.0003,kg
+Standard Error,0.0592,kg
+Median Absolute Error,0.0394,kg
+Mean Absolute Percentage Error (MAPE),16.84\%,\%

@@ -1,0 +1,690 @@
+{
+  "spike": [
+    {
+      "index": 9823,
+      "sensor": "temperature",
+      "magnitude": 16.863895512515597
+    },
+    {
+      "index": 33,
+      "sensor": "temperature",
+      "magnitude": -15.464897558854293
+    },
+    {
+      "index": 1369,
+      "sensor": "temperature",
+      "magnitude": -11.802266449025497
+    },
+    {
+      "index": 3620,
+      "sensor": "temperature",
+      "magnitude": -19.287186214771282
+    },
+    {
+      "index": 3272,
+      "sensor": "temperature",
+      "magnitude": -19.268120923403806
+    },
+    {
+      "index": 6392,
+      "sensor": "temperature",
+      "magnitude": -12.198402273376104
+    },
+    {
+      "index": 251,
+      "sensor": "temperature",
+      "magnitude": -13.510352385716107
+    },
+    {
+      "index": 8187,
+      "sensor": "temperature",
+      "magnitude": -13.229940888170043
+    },
+    {
+      "index": 647,
+      "sensor": "temperature",
+      "magnitude": -16.92044843615822
+    },
+    {
+      "index": 3852,
+      "sensor": "temperature",
+      "magnitude": 22.23059894680685
+    },
+    {
+      "index": 487,
+      "sensor": "temperature",
+      "magnitude": 11.752542830794521
+    },
+    {
+      "index": 7216,
+      "sensor": "temperature",
+      "magnitude": -13.393651474140787
+    },
+    {
+      "index": 7623,
+      "sensor": "temperature",
+      "magnitude": -17.217788166231124
+    },
+    {
+      "index": 532,
+      "sensor": "temperature",
+      "magnitude": 16.969281557304285
+    },
+    {
+      "index": 1543,
+      "sensor": "temperature",
+      "magnitude": 19.090449082755356
+    },
+    {
+      "index": 4535,
+      "sensor": "temperature",
+      "magnitude": -16.082035408439438
+    },
+    {
+      "index": 4700,
+      "sensor": "temperature",
+      "magnitude": -14.338110185174239
+    },
+    {
+      "index": 9688,
+      "sensor": "temperature",
+      "magnitude": -18.34033747998239
+    },
+    {
+      "index": 8732,
+      "sensor": "temperature",
+      "magnitude": -19.36233403895244
+    },
+    {
+      "index": 9831,
+      "sensor": "temperature",
+      "magnitude": -17.726574649469402
+    },
+    {
+      "index": 2886,
+      "sensor": "temperature",
+      "magnitude": 11.894023144020561
+    },
+    {
+      "index": 7590,
+      "sensor": "temperature",
+      "magnitude": 13.267134958325142
+    },
+    {
+      "index": 1472,
+      "sensor": "temperature",
+      "magnitude": -13.353847140945394
+    },
+    {
+      "index": 8271,
+      "sensor": "temperature",
+      "magnitude": 19.218277825381158
+    },
+    {
+      "index": 8260,
+      "sensor": "temperature",
+      "magnitude": -22.32692828173668
+    },
+    {
+      "index": 582,
+      "sensor": "temperature",
+      "magnitude": 19.636018677881648
+    },
+    {
+      "index": 4560,
+      "sensor": "temperature",
+      "magnitude": -19.679032603270517
+    },
+    {
+      "index": 9324,
+      "sensor": "temperature",
+      "magnitude": -19.15588032428672
+    },
+    {
+      "index": 259,
+      "sensor": "temperature",
+      "magnitude": -21.439823620501183
+    },
+    {
+      "index": 8892,
+      "sensor": "temperature",
+      "magnitude": -20.136460219062247
+    },
+    {
+      "index": 2018,
+      "sensor": "temperature",
+      "magnitude": -17.410595455021944
+    },
+    {
+      "index": 451,
+      "sensor": "humidity",
+      "magnitude": 27.28548302642479
+    },
+    {
+      "index": 5571,
+      "sensor": "humidity",
+      "magnitude": 28.158675611259426
+    },
+    {
+      "index": 4269,
+      "sensor": "humidity",
+      "magnitude": -21.286516333627418
+    },
+    {
+      "index": 3329,
+      "sensor": "humidity",
+      "magnitude": 27.864834385588864
+    },
+    {
+      "index": 1258,
+      "sensor": "humidity",
+      "magnitude": 32.41726779689775
+    },
+    {
+      "index": 2801,
+      "sensor": "humidity",
+      "magnitude": -18.919770711659815
+    },
+    {
+      "index": 5427,
+      "sensor": "humidity",
+      "magnitude": -30.974546301126402
+    },
+    {
+      "index": 1587,
+      "sensor": "humidity",
+      "magnitude": 18.830028571450896
+    },
+    {
+      "index": 3351,
+      "sensor": "humidity",
+      "magnitude": 25.91463689261796
+    },
+    {
+      "index": 9743,
+      "sensor": "humidity",
+      "magnitude": -25.100587756566345
+    },
+    {
+      "index": 8747,
+      "sensor": "humidity",
+      "magnitude": -28.832570929334924
+    },
+    {
+      "index": 7020,
+      "sensor": "humidity",
+      "magnitude": -22.306015912220154
+    },
+    {
+      "index": 1719,
+      "sensor": "humidity",
+      "magnitude": 22.785793718309613
+    },
+    {
+      "index": 7468,
+      "sensor": "humidity",
+      "magnitude": -34.822460512540744
+    },
+    {
+      "index": 6373,
+      "sensor": "humidity",
+      "magnitude": 26.349276775004164
+    },
+    {
+      "index": 8403,
+      "sensor": "humidity",
+      "magnitude": 34.33240681439743
+    },
+    {
+      "index": 856,
+      "sensor": "humidity",
+      "magnitude": 34.33320453634775
+    },
+    {
+      "index": 5737,
+      "sensor": "humidity",
+      "magnitude": 19.11767842985646
+    },
+    {
+      "index": 2535,
+      "sensor": "humidity",
+      "magnitude": -36.44723467389566
+    },
+    {
+      "index": 4619,
+      "sensor": "humidity",
+      "magnitude": -35.789696927238325
+    },
+    {
+      "index": 6947,
+      "sensor": "humidity",
+      "magnitude": -30.768203150199046
+    },
+    {
+      "index": 3110,
+      "sensor": "humidity",
+      "magnitude": -29.950407501798253
+    },
+    {
+      "index": 4151,
+      "sensor": "humidity",
+      "magnitude": -26.30626449827054
+    },
+    {
+      "index": 8654,
+      "sensor": "humidity",
+      "magnitude": 33.072969339946184
+    },
+    {
+      "index": 7742,
+      "sensor": "humidity",
+      "magnitude": 29.049307321728588
+    },
+    {
+      "index": 6532,
+      "sensor": "humidity",
+      "magnitude": -36.81226515362179
+    },
+    {
+      "index": 7007,
+      "sensor": "humidity",
+      "magnitude": -27.91514212851765
+    },
+    {
+      "index": 6362,
+      "sensor": "humidity",
+      "magnitude": 31.313561502405516
+    },
+    {
+      "index": 6556,
+      "sensor": "humidity",
+      "magnitude": -22.856390734782416
+    },
+    {
+      "index": 8428,
+      "sensor": "humidity",
+      "magnitude": -35.398268898343964
+    },
+    {
+      "index": 6588,
+      "sensor": "humidity",
+      "magnitude": -38.13459054090284
+    },
+    {
+      "index": 2540,
+      "sensor": "co2",
+      "magnitude": -602.5751453522456
+    },
+    {
+      "index": 6877,
+      "sensor": "co2",
+      "magnitude": -494.75834499833985
+    },
+    {
+      "index": 1588,
+      "sensor": "co2",
+      "magnitude": 458.7356550756926
+    },
+    {
+      "index": 6508,
+      "sensor": "co2",
+      "magnitude": -534.6208492333928
+    },
+    {
+      "index": 1860,
+      "sensor": "co2",
+      "magnitude": 594.7220788113993
+    },
+    {
+      "index": 5989,
+      "sensor": "co2",
+      "magnitude": 671.1381067392578
+    },
+    {
+      "index": 4589,
+      "sensor": "co2",
+      "magnitude": -458.43282070858305
+    },
+    {
+      "index": 9713,
+      "sensor": "co2",
+      "magnitude": -694.0462288852347
+    },
+    {
+      "index": 6431,
+      "sensor": "co2",
+      "magnitude": 696.1597221189791
+    },
+    {
+      "index": 3003,
+      "sensor": "co2",
+      "magnitude": -545.4491883594031
+    },
+    {
+      "index": 3224,
+      "sensor": "co2",
+      "magnitude": -508.9179189708536
+    },
+    {
+      "index": 9788,
+      "sensor": "co2",
+      "magnitude": -520.5513448140139
+    },
+    {
+      "index": 10022,
+      "sensor": "co2",
+      "magnitude": 551.4558311502573
+    },
+    {
+      "index": 6081,
+      "sensor": "co2",
+      "magnitude": 642.4930615738396
+    },
+    {
+      "index": 1794,
+      "sensor": "co2",
+      "magnitude": 619.3251165287986
+    },
+    {
+      "index": 7493,
+      "sensor": "co2",
+      "magnitude": 491.0998745827498
+    },
+    {
+      "index": 4417,
+      "sensor": "co2",
+      "magnitude": 359.2453514160932
+    },
+    {
+      "index": 5865,
+      "sensor": "co2",
+      "magnitude": -531.3272110129257
+    },
+    {
+      "index": 2118,
+      "sensor": "co2",
+      "magnitude": -599.8125581131525
+    },
+    {
+      "index": 4553,
+      "sensor": "co2",
+      "magnitude": 413.01698053198504
+    },
+    {
+      "index": 3268,
+      "sensor": "co2",
+      "magnitude": 608.2904495155699
+    },
+    {
+      "index": 6902,
+      "sensor": "co2",
+      "magnitude": 431.4350013482563
+    },
+    {
+      "index": 1496,
+      "sensor": "co2",
+      "magnitude": -706.2704648182554
+    },
+    {
+      "index": 5976,
+      "sensor": "co2",
+      "magnitude": 645.6363655510136
+    },
+    {
+      "index": 442,
+      "sensor": "co2",
+      "magnitude": -494.11842390279884
+    },
+    {
+      "index": 9618,
+      "sensor": "co2",
+      "magnitude": 499.120354989577
+    },
+    {
+      "index": 3249,
+      "sensor": "co2",
+      "magnitude": -448.3056873904955
+    },
+    {
+      "index": 2174,
+      "sensor": "co2",
+      "magnitude": -375.10486819600203
+    },
+    {
+      "index": 9557,
+      "sensor": "co2",
+      "magnitude": 529.0739528074247
+    },
+    {
+      "index": 9530,
+      "sensor": "co2",
+      "magnitude": -520.4501152428275
+    },
+    {
+      "index": 499,
+      "sensor": "co2",
+      "magnitude": -447.8909130480983
+    },
+    {
+      "index": 156,
+      "sensor": "ammonia",
+      "magnitude": -20.32850539107838
+    },
+    {
+      "index": 931,
+      "sensor": "ammonia",
+      "magnitude": 13.525201916210996
+    },
+    {
+      "index": 3389,
+      "sensor": "ammonia",
+      "magnitude": -20.49483816413349
+    },
+    {
+      "index": 9501,
+      "sensor": "ammonia",
+      "magnitude": 12.137271027713346
+    },
+    {
+      "index": 7295,
+      "sensor": "ammonia",
+      "magnitude": 18.507932829490517
+    },
+    {
+      "index": 2743,
+      "sensor": "ammonia",
+      "magnitude": -12.622554397323553
+    },
+    {
+      "index": 1883,
+      "sensor": "ammonia",
+      "magnitude": 19.844669629012554
+    },
+    {
+      "index": 150,
+      "sensor": "ammonia",
+      "magnitude": 19.162436732191992
+    },
+    {
+      "index": 2182,
+      "sensor": "ammonia",
+      "magnitude": 17.536317979269185
+    },
+    {
+      "index": 9486,
+      "sensor": "ammonia",
+      "magnitude": 11.998003522629697
+    },
+    {
+      "index": 4334,
+      "sensor": "ammonia",
+      "magnitude": -15.223547460922832
+    },
+    {
+      "index": 558,
+      "sensor": "ammonia",
+      "magnitude": -15.929190147942997
+    },
+    {
+      "index": 7441,
+      "sensor": "ammonia",
+      "magnitude": 20.728438592124757
+    },
+    {
+      "index": 6655,
+      "sensor": "ammonia",
+      "magnitude": 14.49894906807094
+    },
+    {
+      "index": 5387,
+      "sensor": "ammonia",
+      "magnitude": 21.855429875212014
+    },
+    {
+      "index": 9945,
+      "sensor": "ammonia",
+      "magnitude": 13.986143418211125
+    },
+    {
+      "index": 7877,
+      "sensor": "ammonia",
+      "magnitude": -12.527062057765914
+    },
+    {
+      "index": 9355,
+      "sensor": "ammonia",
+      "magnitude": -18.811049447981848
+    },
+    {
+      "index": 4421,
+      "sensor": "ammonia",
+      "magnitude": 21.38455430302699
+    },
+    {
+      "index": 7127,
+      "sensor": "ammonia",
+      "magnitude": -18.345943663214157
+    },
+    {
+      "index": 1962,
+      "sensor": "ammonia",
+      "magnitude": -12.591872760528787
+    },
+    {
+      "index": 5446,
+      "sensor": "ammonia",
+      "magnitude": 13.048062776712964
+    },
+    {
+      "index": 339,
+      "sensor": "ammonia",
+      "magnitude": -12.971261384382919
+    },
+    {
+      "index": 9370,
+      "sensor": "ammonia",
+      "magnitude": -19.064754813041528
+    },
+    {
+      "index": 9954,
+      "sensor": "ammonia",
+      "magnitude": 11.691101772667315
+    },
+    {
+      "index": 8988,
+      "sensor": "ammonia",
+      "magnitude": 13.791340925159169
+    },
+    {
+      "index": 3209,
+      "sensor": "ammonia",
+      "magnitude": 19.935733230664002
+    },
+    {
+      "index": 5052,
+      "sensor": "ammonia",
+      "magnitude": 19.351480719783517
+    },
+    {
+      "index": 8801,
+      "sensor": "ammonia",
+      "magnitude": 17.37408859061367
+    },
+    {
+      "index": 32,
+      "sensor": "ammonia",
+      "magnitude": 18.269663887084747
+    },
+    {
+      "index": 2710,
+      "sensor": "ammonia",
+      "magnitude": 15.100283764300453
+    }
+  ],
+  "drift": [
+    {
+      "start_index": 2681,
+      "length": 19,
+      "sensor": "temperature",
+      "rate": 0.5761241594665903,
+      "direction": 1
+    },
+    {
+      "start_index": 1043,
+      "length": 17,
+      "sensor": "humidity",
+      "rate": 0.9381107307816028,
+      "direction": -1
+    },
+    {
+      "start_index": 391,
+      "length": 13,
+      "sensor": "co2",
+      "rate": 19.087397472107114,
+      "direction": 1
+    },
+    {
+      "start_index": 6363,
+      "length": 17,
+      "sensor": "ammonia",
+      "rate": 0.6671737471482043,
+      "direction": -1
+    }
+  ],
+  "stuck": [
+    {
+      "start_index": 8833,
+      "length": 10,
+      "sensor": "temperature",
+      "stuck_value": 20.77
+    },
+    {
+      "start_index": 4037,
+      "length": 11,
+      "sensor": "humidity",
+      "stuck_value": 62.98
+    },
+    {
+      "start_index": 1543,
+      "length": 12,
+      "sensor": "co2",
+      "stuck_value": 615.5
+    },
+    {
+      "start_index": 8628,
+      "length": 12,
+      "sensor": "ammonia",
+      "stuck_value": 8.85
+    }
+  ],
+  "correlated": [
+    {
+      "start_index": 6043,
+      "length": 10,
+      "sensors": [
+        "co2",
+        "ammonia"
+      ]
+    }
+  ]
+}

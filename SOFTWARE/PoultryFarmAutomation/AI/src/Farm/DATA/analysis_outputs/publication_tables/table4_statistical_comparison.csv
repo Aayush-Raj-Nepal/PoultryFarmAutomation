@@ -1,0 +1,5 @@
+Test,Value,Interpretation
+Shapiro-Wilk Normality (W),0.9997,Normal distribution
+Shapiro-Wilk p-value,0.5836,p > 0.05
+Paired t-test (t),-0.3975,Significant: No
+Paired t-test p-value,0.6910,p ≥ 0.05

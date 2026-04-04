@@ -1,0 +1,5 @@
+metric,value,test_name
+Shapiro_W,0.9996594514264466,Normality
+Shapiro_p,0.58356502888113,Normality
+Test_Statistic,-0.397515598217644,Paired t-test
+Test_p_value,0.6910042587165044,Paired t-test

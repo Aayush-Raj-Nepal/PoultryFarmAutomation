@@ -1,0 +1,80 @@
+% Publication-Ready Tables
+% Generated for research paper
+% ==========================================
+
+
+\begin{table}[h]
+\centering
+\caption{Sensor-Reference Agreement Metrics}
+\label{tab:agreement}
+\begin{tabular}{lcc}
+\hline
+\textbf{Metric} & \textbf{Value} & \textbf{p-value} \\
+\hline
+Pearson correlation ($r$) & 0.9988 & $<0.001$ \\
+Spearman correlation ($\rho$) & 0.9982 & $<0.001$ \\
+ICC(2,1) & 0.9988 & $<0.001$ \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[h]
+\centering
+\caption{Error Analysis Metrics}
+\label{tab:errors}
+\begin{tabular}{lcc}
+\hline
+\textbf{Metric} & \textbf{Value} & \textbf{Unit} \\
+\hline
+Mean Absolute Error (MAE) & 0.0472 & kg \\
+Root Mean Square Error (RMSE) & 0.0592 & kg \\
+Bias (Mean Error) & -0.0003 & kg \\
+Standard Error & 0.0592 & kg \\
+Median Absolute Error & 0.0394 & kg \\
+Mean Absolute Percentage Error & 16.84\% & \% \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[h]
+\centering
+\caption{Bland-Altman Agreement Analysis}
+\label{tab:bland_altman}
+\begin{tabular}{lcc}
+\hline
+\textbf{Parameter} & \textbf{Value} & \textbf{95\% CI} \\
+\hline
+Bias (mean difference) & -0.0003 & -0.0003 $\pm$ 0.001642 \\
+Standard deviation of differences & 0.0592 & -- \\
+Upper LoA (bias + 1.96$\times$SD) & 0.1158 & -- \\
+Lower LoA (bias - 1.96$\times$SD) & -0.1165 & -- \\
+Points outside LoA (\%) & 5.14 & -- \\
+Proportional bias slope & -0.0024 & -- \\
+Proportional bias p-value & 0.0005 & -- \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[h]
+\centering
+\caption{Statistical Comparison: Sensor vs Reference}
+\label{tab:stats}
+\begin{tabular}{lcc}
+\hline
+\textbf{Test} & \textbf{Value} & \textbf{Interpretation} \\
+\hline
+Shapiro-Wilk Normality ($W$) & 0.9997 & Normally distributed \\
+Shapiro-Wilk p-value & 0.5836 & $p > 0.05$ \\
+Paired t-test ($t$) & -0.3975 & No significant difference \\
+Paired t-test p-value & 0.6910 & $p \geq 0.05$ \\
+\hline
+\end{tabular}
+\end{table}
+
+

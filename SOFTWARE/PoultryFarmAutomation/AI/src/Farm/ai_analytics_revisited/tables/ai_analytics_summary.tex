@@ -1,0 +1,18 @@
+\begin{table}[h]
+\centering
+\caption{AI Analytics Modules Summary}
+\label{tab:ai_summary}
+\begin{tabular}{l|p{4cm}|p{3cm}|p{3cm}}
+\hline
+\textbf{Module} & \textbf{Method} & \textbf{Performance} & \textbf{Output} \\
+\hline
+Anomaly Detection & Ensemble (Z-score + IF + LOF) & F1 = 0.0154 & Anomaly score, label \\
+\hline
+Forecasting & Random Forest + Lag Features & R² = 0.9944 & 15-min ahead prediction \\
+\hline
+Risk Scoring & Weighted Multi-Sensor Index & Normal: 97.2\% & Normal/Warning/Critical \\
+\hline
+State Clustering & K-Means (k=4) & 4 states identified & Environmental state \\
+\hline
+\end{tabular}
+\end{table}

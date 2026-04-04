@@ -1,0 +1,43 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{CONCLUSION, LIMITATIONS AND FUTURE ENHANCEMENT}
+\subsection{Conclusion}
+
+This project successfully developed an IoT-based monitoring system designed for real-time poultry farm analysis and monitoring. The system effectively integrates multiple sensors with an Arduino Nano microcontroller to monitor critical environmental parameters such as temperature, humidity, ammonia, and carbon dioxide levels.
+
+
+The collected data is transmitted to a cloud platform and visualized through a web-based dashboard, enabling remote monitoring and improved decision-making. The system demonstrated reliable performance during testing, with consistent data acquisition and timely updates.
+
+
+The implementation of the project highlights the potential of IoT technology in transforming traditional poultry farming into a more efficient and data-driven process. By providing continuous monitoring and timely alerts, the system can help improve poultry health, reduce manual effort, and enhance overall farm productivity.
+
+
+Overall, the project proves to be a cost-effective and scalable solution suitable for both small-scale and commercial poultry farms, particularly in regions where efficient farm management is essential.
+
+
+\subsection{Limitations}
+\subsubsection{Hardware Integration Challenges}
+While individual components have been tested, full integration into a stable, final PCB with a protective casing for harsh farm environments is still in progress.
+
+\subsubsection{Internet Dependency}
+The system relies on stable internet connectivity for real-time cloud data transmission and dashboard updates, which may cause delays in areas with poor network infrastructure.
+
+
+\subsubsection{Initial Threshold-Based Logic}
+Currently, the system operates primarily on threshold-based control rather than complex predictive decision-making.
+
+
+\subsection{Future Enhancements}
+The following improvements can be implemented to enhance the system in future:
+\begin{itemize}
+     \item Implementation of Over-The-Air (OTA) updates to enable remote firmware upgrades without physical access to the device.
+    \item Integration of automated control systems, including actuators such as ventilation fans, heaters, and feeding mechanisms for complete environmental regulation.
+    \item Implementation of machine learning algorithms for predictive analysis, enabling early detection of health risks and optimization of environmental conditions.
+    \item Development of a dedicated mobile application with features such as real-time notifications, historical data visualization, and remote system control.
+    \item Design and implementation of a compact and robust PCB along with protective enclosures to improve durability and reliability in farm environments.
+    \item Integration of a solar-powered energy system to enable continuous operation in remote or off-grid areas.
+    \item Addition of advanced sensors or camera-based monitoring systems for behavior analysis and improved poultry management.
+\end{itemize}
+\end{document}

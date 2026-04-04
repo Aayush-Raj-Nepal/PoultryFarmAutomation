@@ -1,0 +1,4 @@
+Metric,Value,p-value
+Pearson correlation (r),0.9988,<0.001
+Spearman correlation (rho),0.9982,<0.001
+"ICC(2,1)",0.9988,<0.001

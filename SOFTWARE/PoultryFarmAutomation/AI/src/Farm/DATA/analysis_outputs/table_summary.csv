@@ -1,0 +1,14 @@
+Analysis_Type,Rows,Columns,File
+Bland Altman Results,7,2,bland_altman_results.csv
+Cleaned Data,5000,3,cleaned_data.csv
+Clustering Validation,4,3,clustering_validation.csv
+Correlation Results,2,3,correlation_results.csv
+Data With Clusters,5000,4,data_with_clusters.csv
+Descriptive Statistics,8,3,descriptive_statistics.csv
+Error Metrics,7,2,error_metrics.csv
+Icc Results,1,2,icc_results.csv
+Paired Test Results,4,3,paired_test_results.csv
+Regression Results,6,2,regression_results.csv
+Summary Results,17,2,summary_results.csv
+Table Summary,12,4,table_summary.csv
+Time Series Stability,5000,9,time_series_stability.csv
