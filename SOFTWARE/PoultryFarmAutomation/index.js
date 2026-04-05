@@ -150,36 +150,6 @@ function parseIncomingPayload(body) {
   return { deviceId, cycle, samples };
 }
 
-function normalizeWeightToKg(rawWeight) {
-  if (rawWeight == null || rawWeight === "") return 0;
-
-  if (typeof rawWeight === "number") {
-    if (!Number.isFinite(rawWeight)) return 0;
-    return rawWeight >= 10 ? rawWeight / 1000 : rawWeight;
-  }
-
-  const normalized = String(rawWeight).trim().toLowerCase();
-  if (!normalized) return 0;
-
-  const match = normalized.match(/-?\d+(?:\.\d+)?/);
-  if (!match) return 0;
-
-  const value = Number(match[0]);
-  if (!Number.isFinite(value)) return 0;
-
-  if (normalized.includes("kg")) return value;
-  if (
-    normalized.includes("gram") ||
-    normalized.includes("grams") ||
-    normalized.includes("gm") ||
-    normalized.includes("g")
-  ) {
-    return value / 1000;
-  }
-
-  return value >= 10 ? value / 1000 : value;
-}
-
 function calculateComfortScore(sample, thresholds) {
   let score = 100;
   const t = Number(sample.temperature_c ?? 25);
@@ -420,8 +390,6 @@ app.put("/api/admin/settings", authenticateAdmin, async (req, res) => {
 // Ingest Reading
 app.post("/ingest", async (req, res) => {
   try {
-    console.log("[/ingest] Incoming payload:", JSON.stringify(req.body));
-
     const { deviceId, cycle, samples } = parseIncomingPayload(req.body);
     if (!samples.length) return res.status(400).json({ error: "No samples" });
 
@@ -436,21 +404,10 @@ app.post("/ingest", async (req, res) => {
 
         // Data Scaling for Hardware:
         // 1. Ammonia: -145 means 1.45 ppm (Scale by Math.abs(x)/100)
-        // 2. Weight: normalize strings like "0.2kg"/"300g" and legacy gram values
+        // 2. Weight: Grams to Kilograms (Scale by x/1000)
         const rawNh3 = s.n ?? s.nh3_ppm ?? s.a;
-        const rawWeight = s.w ?? s.weight_kg ?? s.weight;
         const scaledNh3 = Math.abs(Number(rawNh3 || 0)) / 100;
-        const scaledWeight = normalizeWeightToKg(rawWeight);
-
-        console.log("[/ingest] Sample normalization:", {
-          deviceId,
-          cycle,
-          sampleIndex: s.i ?? i,
-          rawWeight,
-          normalizedWeightKg: scaledWeight,
-          rawNh3,
-          normalizedNh3Ppm: scaledNh3,
-        });
+        const scaledWeight = Number(s.w || 0) / 1000;
 
         const { rows } = await client.query(
           `INSERT INTO readings (device_uid, cycle_no, sample_index, temperature_c, humidity_pct, mq_air_raw, light_lux, co2_ppm, nh3_ppm, weight_kg)
